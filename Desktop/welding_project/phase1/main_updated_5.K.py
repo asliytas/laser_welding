@@ -1,3 +1,12 @@
+"""
+Robotic Laser Welding - Phase 3 (main_updated_5.K.py)
+
+5.K is a simplified branch of 5.I:
+- keeps shared-edge, coincident-edge, section fallback, point-contact, and facing-face gap edge-pair flows
+- removes the older path-based bridging fallback layer
+- for separated bodies whose selected faces do not oppose each other, suggests Manual mode
+"""
+
 
 import sys
 import json
@@ -26,10 +35,13 @@ from OCC.Core.TopExp import TopExp_Explorer
 from OCC.Core.TopTools import TopTools_HSequenceOfShape
 from OCC.Core.BRepAlgoAPI import BRepAlgoAPI_Section
 from OCC.Core.BRepExtrema import BRepExtrema_DistShapeShape
-from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_MakeVertex, BRepBuilderAPI_MakeWire
+from OCC.Core.BRepBuilderAPI import (
+    BRepBuilderAPI_MakeVertex,
+    BRepBuilderAPI_MakeWire,
+)
 from OCC.Core.BRepAdaptor import BRepAdaptor_Surface
 from OCC.Core.BRepTools import BRepTools_WireExplorer
-from OCC.Core.GeomAbs import GeomAbs_Plane, GeomAbs_Cylinder
+from OCC.Core.GeomAbs import GeomAbs_Plane
 from OCC.Core.GProp import GProp_GProps
 from OCC.Core.BRepGProp import brepgprop
 from OCC.Core.ShapeAnalysis import ShapeAnalysis_FreeBounds
@@ -46,7 +58,6 @@ COINCIDENT_ENDPOINT_TOL  = 0.1
 COINCIDENT_DIST_TOL      = 0.1
 CONTINUITY_GAP_TOL       = 0.5
 DUPLICATE_TOL            = 0.5
-BRIDGING_LEN_DUP_TOL     = 1.0   # 5.H: bridging duplicate için uzunluk farkı toleransı
 
 CLEARANCE_THRESHOLD_MM   = 5.0
 BRIDGING_MIN_DIST_MM     = 0.05
@@ -97,22 +108,8 @@ def _edge_length(edge):
     return props.Mass()
 
 
-def _edge_chord_length(edge):
-    pts = _edge_endpoints(edge)
-    if pts is None:
-        return 0.0
-    p0, _, p1 = pts
-    return _pnt_dist((p0.X(), p0.Y(), p0.Z()), (p1.X(), p1.Y(), p1.Z()))
 
 
-def _edge_curvature_score(edge, length=None):
-    """Line edge ≈ 0, arc/circle edge > 0."""
-    if length is None:
-        length = _edge_length(edge)
-    if length <= EDGE_MIN_LENGTH:
-        return 0.0
-    chord = _edge_chord_length(edge)
-    return max(0.0, length - chord)
 
 
 def _face_info(face):
@@ -194,95 +191,6 @@ def _vec_reversed(v):
 
 # ── Bridging Paths Dialog (5.H: "segment" terminology, default Checked) ─────
 
-class BridgingPathsDialog(QDialog):
-    """
-    Path-based bridging seçim dialog'u.
-    5.H: "segment" terminolojisi, default Qt.Checked.
-    """
-
-    def __init__(self, paths, single_side_warning=False, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Gap Welding Paths")
-        self.paths = paths
-        self.resize(640, 420)
-
-        layout = QVBoxLayout()
-
-        info = QLabel(
-            f"Bu iki face arasında <b>{len(paths)}</b> adet bağımsız "
-            f"<b>kaynak segmenti</b> tespit edildi.<br>"
-            f"Hangisi(leri)ni eklemek istiyorsunuz?<br><br>"
-            f"<i>Not: Her satır segment listesine bir segment olarak eklenir. "
-            f"Birden fazlasını seçerseniz hepsi tek seferde eklenir.</i>"
-        )
-        info.setWordWrap(True)
-        info.setStyleSheet("padding: 8px;")
-        layout.addWidget(info)
-
-        if single_side_warning:
-            single_note = QLabel(
-                "<b>⚠ Sadece 1 segment tespit edildi.</b><br>"
-                "Diğer body'nin seçili face'inin kenarları karşı face'e yakın değil. "
-                "Diğer taraftaki kaynak yolu muhtemelen <b>farklı bir face</b> üzerinde — "
-                "ihtiyaç varsa o face'i seçip ayrı bir 'Add Segment' yapın, "
-                "veya Manual mode kullanın."
-            )
-            single_note.setWordWrap(True)
-            single_note.setStyleSheet(
-                "padding: 6px; background: #fff3cd; color: #664d00; "
-                "border: 1px solid #ffe69c; border-radius: 3px;"
-            )
-            layout.addWidget(single_note)
-
-        self.list_widget = QListWidget()
-        self.list_widget.setStyleSheet("QListWidget::item { padding: 8px; }")
-        for p in paths:
-            path_name = f"Path {p['side']}"
-            text = (
-                f"{path_name}  |  Body {p['body_idx']} side  |  "
-                f"length: {p['length']:.1f} mm  |  "
-                f"segments: {p['n_edges']}  |  "
-                f"type: {p['type']}  |  "
-                f"avg gap: {p['avg_gap']:.2f} mm"
-            )
-            item = QListWidgetItem(text)
-            item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
-            # 5.I: default checked — typical kullanıcı hepsini ekler
-            item.setCheckState(Qt.Checked)
-            self.list_widget.addItem(item)
-        layout.addWidget(self.list_widget)
-
-        warn = QLabel(
-            "⚠ Gap path'leri otomatik tespit edilir.\n"
-            "Path harfi body numarasına göre atanır: Body 1 → Path A, Body 2 → Path B. "
-            "Eklemek istemediğiniz path'in işaretini kaldırın."
-        )
-        warn.setStyleSheet(
-            "color: #888; font-style: italic; font-size: 11px; padding: 4px;"
-        )
-        warn.setWordWrap(True)
-        layout.addWidget(warn)
-
-        btn_layout = QHBoxLayout()
-        self.btn_add = QPushButton("Add Selected as Segments")
-        self.btn_add.clicked.connect(self.accept)
-        self.btn_add.setDefault(True)
-        btn_layout.addWidget(self.btn_add)
-
-        self.btn_cancel = QPushButton("Cancel")
-        self.btn_cancel.clicked.connect(self.reject)
-        btn_layout.addWidget(self.btn_cancel)
-        layout.addLayout(btn_layout)
-
-        self.setLayout(layout)
-
-    def selected_indices(self):
-        result = []
-        for i in range(self.list_widget.count()):
-            item = self.list_widget.item(i)
-            if item.checkState() == Qt.Checked:
-                result.append(i)
-        return result
 
 
 class GapEdgePairsDialog(QDialog):
@@ -375,7 +283,7 @@ class WeldingViewer(qtViewer3d):
 # ── Main Window ─────────────────────────────────────────────────────────────
 
 class MainWindow(QMainWindow):
-    """5.I: weld/segment model, operator labels, corrected gap dialogs."""
+    """5.K: simplified weld/segment model with facing-face gap filter."""
 
     COLOR_FACE_A   = Quantity_Color(1.00, 0.85, 0.00, Quantity_TOC_RGB)
     COLOR_FACE_B   = Quantity_Color(0.10, 0.70, 1.00, Quantity_TOC_RGB)
@@ -1055,24 +963,21 @@ class MainWindow(QMainWindow):
         type_a = self._face_surface_type(face_a)
         type_b = self._face_surface_type(face_b)
 
-        if type_a == GeomAbs_Cylinder and type_b == GeomAbs_Cylinder:
-            return True
+        if type_a != GeomAbs_Plane or type_b != GeomAbs_Plane:
+            return False
 
-        if type_a == GeomAbs_Plane and type_b == GeomAbs_Plane:
-            normal_a = self._face_normal_at_midpoint(face_a)
-            normal_b = self._face_normal_at_midpoint(face_b)
-            _, center_a = _face_info(face_a)
-            _, center_b = _face_info(face_b)
-            direction = _vec_normalized(_vec_between(center_a, center_b))
-            if normal_a is None or normal_b is None or direction is None:
-                return False
-            return (
-                _vec_dot(normal_a, direction) >= PLANAR_FACING_DOT_MIN and
-                _vec_dot(normal_b, _vec_reversed(direction)) >= PLANAR_FACING_DOT_MIN and
-                _vec_dot(normal_a, normal_b) <= -PLANAR_FACING_DOT_MIN
-            )
-
-        return True
+        normal_a = self._face_normal_at_midpoint(face_a)
+        normal_b = self._face_normal_at_midpoint(face_b)
+        _, center_a = _face_info(face_a)
+        _, center_b = _face_info(face_b)
+        direction = _vec_normalized(_vec_between(center_a, center_b))
+        if normal_a is None or normal_b is None or direction is None:
+            return False
+        return (
+            _vec_dot(normal_a, direction) >= PLANAR_FACING_DOT_MIN and
+            _vec_dot(normal_b, _vec_reversed(direction)) >= PLANAR_FACING_DOT_MIN and
+            _vec_dot(normal_a, normal_b) <= -PLANAR_FACING_DOT_MIN
+        )
 
     # ─── ALGO 1: Topological shared edges ─────────────────────────────
 
@@ -1236,68 +1141,6 @@ class MainWindow(QMainWindow):
 
     # ─── ALGO 4: Path-based bridging ──────────────────────────────────
 
-    def _find_bridging_paths(self, face_a, face_b):
-        body_a_idx = self.face_a[1] if self.face_a is not None else 0
-        body_b_idx = self.face_b[1] if self.face_b is not None else 0
-
-        paths = []
-
-        for side, face_main, face_other, body_idx in [
-            (self._path_letter_for_body(body_a_idx), face_a, face_b, body_a_idx),
-            (self._path_letter_for_body(body_b_idx), face_b, face_a, body_b_idx),
-        ]:
-            near_edges = []
-            edge_dists = []
-
-            exp = TopExp_Explorer(face_main, TopAbs_EDGE)
-            while exp.More():
-                edge = exp.Current()
-                length = _edge_length(edge)
-                if length < EDGE_MIN_LENGTH:
-                    exp.Next()
-                    continue
-                d = BRepExtrema_DistShapeShape(edge, face_other)
-                d.Perform()
-                if not d.IsDone():
-                    exp.Next()
-                    continue
-                dist = d.Value()
-                if BRIDGING_MIN_DIST_MM <= dist <= BRIDGING_MAX_DIST_MM:
-                    near_edges.append((edge, length))
-                    edge_dists.append(dist)
-                exp.Next()
-
-            if not near_edges:
-                continue
-
-            wires = self._build_wires(near_edges)
-            if not wires:
-                continue
-
-            primary = wires[0]
-            wire = primary["wire"]
-            length = primary["length"]
-            n_edges = primary["n_edges"]
-            is_closed = primary["closed"]
-            ptype = self._path_type_label(primary)
-            start_pt, end_pt, _ = _wire_endpoints(wire)
-            avg_gap = sum(edge_dists) / len(edge_dists) if edge_dists else 0.0
-
-            paths.append({
-                "side":         side,
-                "body_idx":     body_idx,
-                "edges":        [e for e, _ in near_edges],
-                "wire":         wire,
-                "length":       length,
-                "n_edges":      n_edges,
-                "is_closed":    is_closed,
-                "type":         ptype,
-                "start_point":  start_pt,
-                "end_point":    end_pt,
-                "avg_gap":      avg_gap,
-            })
-
-        return paths
 
     def _face_edges(self, face):
         edges = []
@@ -1391,236 +1234,11 @@ class MainWindow(QMainWindow):
         candidates.sort(key=lambda c: (round(c["dist"], 3), -max(c["length_a"], c["length_b"])))
         return self._mark_recommended_gap_pairs(candidates)
 
-    def _face_boundary_path(self, face_main, face_other, side, body_idx):
-        edges_info = []
-        edge_dists = []
-        near_edges = []
-        near_dists = []
-        exp = TopExp_Explorer(face_main, TopAbs_EDGE)
-        while exp.More():
-            edge = exp.Current()
-            length = _edge_length(edge)
-            if length >= EDGE_MIN_LENGTH:
-                edges_info.append((edge, length))
-                d = BRepExtrema_DistShapeShape(edge, face_other)
-                d.Perform()
-                if d.IsDone():
-                    dist = d.Value()
-                    edge_dists.append(dist)
-                    if BRIDGING_MIN_DIST_MM <= dist <= BRIDGING_MAX_DIST_MM:
-                        near_edges.append((edge, length))
-                        near_dists.append(dist)
-            exp.Next()
 
-        source_edges = near_edges if near_edges else edges_info
-        source_dists = near_dists if near_dists else edge_dists
-        curved_near = [
-            item for item in near_edges
-            if _edge_curvature_score(item[0], item[1]) > max(0.05, item[1] * 0.01)
-        ]
-        curved_all = [
-            item for item in edges_info
-            if _edge_curvature_score(item[0], item[1]) > max(0.05, item[1] * 0.01)
-        ]
-        if curved_near:
-            source_edges = curved_near
-        elif curved_all:
-            source_edges = curved_all
-
-        if len(source_edges) > 1:
-            best_edge, best_len = max(
-                source_edges,
-                key=lambda item: (_edge_curvature_score(item[0], item[1]), item[1])
-            )
-            # Cylinder/hole gibi gap senaryolarında line seam yerine body başına
-            # en anlamlı circle/arc edge'i öner.
-            source_edges = [(best_edge, best_len)]
-        wires = self._build_wires(source_edges)
-        if not wires and source_edges:
-            longest = max(source_edges, key=lambda item: item[1])
-            wires = self._build_wires([longest])
-        if not wires:
-            return None
-
-        primary = wires[0]
-        wire = primary["wire"]
-        start_pt, end_pt, _ = _wire_endpoints(wire)
-        avg_gap = sum(source_dists) / len(source_dists) if source_dists else 0.0
-
-        return {
-            "side":         side,
-            "body_idx":     body_idx,
-            "edges":        [e for e, _ in source_edges],
-            "wire":         wire,
-            "length":       primary["length"],
-            "n_edges":      primary["n_edges"],
-            "is_closed":    primary["closed"],
-            "type":         self._path_type_label(primary),
-            "start_point":  start_pt,
-            "end_point":    end_pt,
-            "avg_gap":      avg_gap,
-            "source":       "face-boundary",
-        }
-
-    def _find_gap_boundary_paths(self, face_a, face_b):
-        body_a_idx = self.face_a[1] if self.face_a is not None else 0
-        body_b_idx = self.face_b[1] if self.face_b is not None else 0
-        paths = []
-        for side, face_main, face_other, body_idx in [
-            (self._path_letter_for_body(body_a_idx), face_a, face_b, body_a_idx),
-            (self._path_letter_for_body(body_b_idx), face_b, face_a, body_b_idx),
-        ]:
-            path = self._face_boundary_path(face_main, face_other, side, body_idx)
-            if path is not None:
-                paths.append(path)
-        return paths
 
     # ─── 5.H: side-aware bridging duplicate check ─────────────────────
 
-    def _bridging_path_already_added(self, path):
-        """Bu bridging path daha önce segment olarak eklenmiş mi?
-        5.H: SADECE aynı side'dan ('Bridging-A' veya 'Bridging-B') olan
-        mevcut segmentleri karşılaştır. Bu, konsantrik dairelerde
-        Path A ve Path B'nin endpoint'lerinin yakın olması durumunda
-        yanlış duplicate tespitini önler."""
-        side = path.get("side", "?")
-        target_method_prefix = f"Bridging-{side}"
 
-        cand_start = path["start_point"]
-        cand_end = path["end_point"]
-        cand_length = path.get("length", 0.0)
-
-        if cand_start is None:
-            return None
-
-        for i, seg in enumerate(self._active_segments()):
-            seg_method = seg.get("method", "")
-            # Sadece aynı side'dan bridging segmentlerini incele
-            if not seg_method.startswith(target_method_prefix):
-                continue
-
-            seg_start = seg.get("start_point")
-            seg_end = seg.get("end_point")
-            if seg_start is None or seg_end is None:
-                continue
-
-            # Endpoint match
-            forward = (
-                _pnt_dist(cand_start, seg_start) < DUPLICATE_TOL and
-                _pnt_dist(cand_end,   seg_end)   < DUPLICATE_TOL
-            )
-            reverse = (
-                _pnt_dist(cand_start, seg_end)   < DUPLICATE_TOL and
-                _pnt_dist(cand_end,   seg_start) < DUPLICATE_TOL
-            )
-            if not (forward or reverse):
-                continue
-
-            # Ek kontrol: uzunluk farkı
-            seg_length = seg.get("length", 0.0)
-            if abs(cand_length - seg_length) > BRIDGING_LEN_DUP_TOL:
-                continue
-
-            return i + 1
-
-        return None
-
-    def _apply_bridging_paths(self, paths, selected_indices):
-        if not selected_indices:
-            return
-
-        ctx = self.viewer._display.GetContext()
-        added = 0
-        skipped = 0
-        last_method = ""
-        last_total = 0.0
-        last_type = ""
-
-        for idx in selected_indices:
-            p = paths[idx]
-
-            dup_idx = self._bridging_path_already_added(p)
-            if dup_idx is not None:
-                print(f"[ALGO] Bridging-{p['side']} skipped: "
-                      f"duplicate of segment {dup_idx}")
-                skipped += 1
-                continue
-
-            wire        = p["wire"]
-            length      = p["length"]
-            ptype       = p["type"]
-            is_closed   = p["is_closed"]
-            n_edges     = p["n_edges"]
-            side        = p["side"]
-            avg_gap     = p["avg_gap"]
-            start_pt    = p["start_point"]
-            end_pt      = p["end_point"]
-
-            method_used = f"Bridging-{side} (gap {avg_gap:.2f} mm)"
-
-            wires_for_seg = [{
-                "wire": wire,
-                "length": length,
-                "closed": is_closed,
-                "n_edges": n_edges,
-            }]
-
-            segments = self._active_segments()
-            seg_idx = len(segments)
-            color = self._segment_color(seg_idx)
-            ais = AIS_Shape(wire)
-            ais.SetColor(color)
-            ais.SetWidth(5.0)
-            ctx.Display(ais, False)
-
-            segments.append({
-                "wires":       wires_for_seg,
-                "ais_list":    [ais],
-                "method":      method_used,
-                "length":      length,
-                "type":        ptype,
-                "start_point": start_pt,
-                "end_point":   end_pt,
-                "is_closed":   is_closed,
-            })
-            added += 1
-            last_method = method_used
-            last_total = length
-            last_type = ptype
-
-        self.viewer._display.Repaint()
-
-        if self.face_a is not None:
-            ctx.Remove(self.face_a[2], False)
-            self.face_a = None
-        if self.face_b is not None:
-            ctx.Remove(self.face_b[2], False)
-            self.face_b = None
-        self.viewer._display.Repaint()
-
-        if added > 0:
-            active = self._active_weld()
-            if active is not None:
-                active["context"] = "bridging"
-            self._auto_order_active_weld()
-            self.lbl_path.setText(
-                f"⚠ Gap path: {added} segment(s) added — verify visually\n\n"
-                f"  Last: {last_type}, {last_total:.2f} mm  "
-                f"({self._method_human_label(last_method)})"
-            )
-        elif skipped > 0:
-            self.lbl_path.setText(
-                f"All selected segments were already added.\n"
-                f"Skipped: {skipped}"
-            )
-
-        self._rebuild_segment_list()
-        self._refresh_weld_list()
-        self._update_segments_label()
-        self._update_status()
-        self._update_status_bar()
-
-        print(f"[ALGO] Gap paths applied: added={added}, skipped={skipped}")
 
     def _segment_from_edge(self, edge, length, method_used, pair_idx):
         wires = self._build_wires([(edge, length)])
@@ -1655,23 +1273,6 @@ class MainWindow(QMainWindow):
         seg["ais_list"] = ais_list
         weld["segments"].append(seg)
 
-    def _add_path_dict_to_weld(self, weld, path):
-        seg = {
-            "wires": [{
-                "wire": path["wire"],
-                "length": path["length"],
-                "closed": path["is_closed"],
-                "n_edges": path["n_edges"],
-            }],
-            "ais_list": [],
-            "method": f"Bridging-{path['side']} (gap {path['avg_gap']:.2f} mm)",
-            "length": path["length"],
-            "type": path["type"],
-            "start_point": path["start_point"],
-            "end_point": path["end_point"],
-            "is_closed": path["is_closed"],
-        }
-        self._display_segment_for_weld(weld, seg)
 
     def _path_for_gap_side(self, side, body_idx, prefer_active=False):
         active = self._active_weld()
@@ -1751,50 +1352,6 @@ class MainWindow(QMainWindow):
                 f"Atlanan (duplicate): {skipped}"
             )
 
-    def _apply_gap_paths_as_body_paths(self, paths, selected_indices):
-        if not selected_indices:
-            return
-
-        added_by_side = {}
-        first_path_weld = None
-        for idx in selected_indices:
-            p = paths[idx]
-            side = p["side"]
-            weld = self._path_for_gap_side(
-                side,
-                p["body_idx"],
-                prefer_active=(first_path_weld is None)
-            )
-            if first_path_weld is None:
-                first_path_weld = weld
-            self._add_path_dict_to_weld(weld, p)
-            added_by_side[side] = added_by_side.get(side, 0) + 1
-
-        if first_path_weld is not None:
-            self.active_weld_id = first_path_weld["id"]
-        self._sync_collected_segments()
-        for weld in self.welds:
-            self._auto_order_segments_for_continuity(weld["segments"])
-        self._reassign_segment_colors()
-
-        ctx = self.viewer._display.GetContext()
-        if self.face_a is not None:
-            ctx.Remove(self.face_a[2], False)
-            self.face_a = None
-        if self.face_b is not None:
-            ctx.Remove(self.face_b[2], False)
-            self.face_b = None
-        self.viewer._display.Repaint()
-
-        lines = ["Gap paths added:"]
-        for side in sorted(added_by_side):
-            lines.append(f"  Path {side}: {added_by_side[side]} segment(s)")
-        self.lbl_path.setText("\n".join(lines))
-        self._refresh_weld_list()
-        self._rebuild_segment_list()
-        self._update_segments_label()
-        self._update_status()
-        self._update_status_bar()
 
     # ─── Wire builder ──────────────────────────────────────────────────
 
@@ -1888,8 +1445,6 @@ class MainWindow(QMainWindow):
             return letters[body_idx - 1]
         return f"B{body_idx}"
 
-    def _path_label_for_body(self, body_idx):
-        return f"Path {self._path_letter_for_body(body_idx)}"
 
     # ─── Segment colors ───────────────────────────────────────────────
 
@@ -2016,12 +1571,8 @@ class MainWindow(QMainWindow):
         )
 
     def _try_bridging_flow(self, face_a, face_b, body_a, body_b, gap):
-        print("[ALGO] Trying gap edge-pair paths...")
         candidates = self._find_gap_edge_pairs(face_a, face_b)
         print(f"[ALGO] Gap edge pairs found: {len(candidates)}")
-        for i, c in enumerate(candidates, 1):
-            print(f"  Pair {i}: Body {c['body_a']} len={c['length_a']:.2f}, "
-                  f"Body {c['body_b']} len={c['length_b']:.2f}, gap={c['dist']:.2f}")
 
         if candidates:
             dialog = GapEdgePairsDialog(candidates, parent=self)
@@ -2031,75 +1582,12 @@ class MainWindow(QMainWindow):
                     self._apply_gap_edge_pairs(candidates, selected)
             return
 
-        print("[ALGO] No edge pairs; trying path-based bridging...")
-        all_paths = self._find_bridging_paths(face_a, face_b)
-        expected_sides = {
-            self._path_letter_for_body(body_a),
-            self._path_letter_for_body(body_b),
-        }
-        found_sides = {p.get("side") for p in all_paths}
-        if found_sides != expected_sides:
-            print("[ALGO] Missing one or both near-edge paths; trying face-boundary gap paths...")
-            fallback_paths = self._find_gap_boundary_paths(face_a, face_b)
-            for p in fallback_paths:
-                if p.get("side") not in found_sides:
-                    all_paths.append(p)
-                    found_sides.add(p.get("side"))
-        print(f"[ALGO] Gap paths found: {len(all_paths)}")
-        for p in all_paths:
-            print(f"  Side {p['side']} (Body {p['body_idx']}): "
-                  f"{p['n_edges']} edge(s), length {p['length']:.2f} mm, "
-                  f"closed={p['is_closed']}, avg_gap={p['avg_gap']:.2f} mm")
-
-        new_paths = []
-        already_added = []
-        for p in all_paths:
-            dup = self._bridging_path_already_added(p)
-            if dup is None:
-                new_paths.append(p)
-            else:
-                already_added.append((p, dup))
-                print(f"[ALGO] Side {p['side']} (Body {p['body_idx']}) "
-                      f"already in active weld as Segment {dup} — filtered out")
-
-        if not all_paths:
-            QMessageBox.information(
-                self, "Gap Detected — Path Could Not Be Built",
-                f"Seçilen iki yüz arasında {gap:.2f} mm boşluk var.\n"
-                "Bu mesafede otomatik path oluşturulamadı.\n\n"
-                "Olası durumlar:\n"
-                "  • Seçilen yüzlerden sınır path'i üretilemiyor\n"
-                "  • Yüz sınırları çok küçük veya bozuk edge'lerden oluşuyor\n"
-                "  • Gap 5 mm altında olsa bile bu geometri otomatik path için uygun değil\n\n"
-                "Çözüm:\n"
-                "  • Karşılıklı bakan yüzleri tekrar seçin\n"
-                "  • Veya Manual mode'a geçin"
-            )
-            return
-
-        if not new_paths:
-            answer = QMessageBox.question(
-                self, "All Gap Paths Already in This Path",
-                "Bu face çiftindeki tüm gap path'leri aktif path'e zaten eklenmiş.\n\n"
-                "Aynı segmentleri YENİ BİR PATH altında eklemek ister misiniz?\n"
-                "(Örnek senaryo: Bu kenarı iki kez kaynak yapacaksanız)",
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No
-            )
-            if answer == QMessageBox.Yes:
-                self._create_new_weld(name=None, context="bridging")
-                self._apply_bridging_paths(all_paths, list(range(len(all_paths))))
-            return
-
-        dialog = BridgingPathsDialog(
-            new_paths,
-            single_side_warning=(len(all_paths) == 1),
-            parent=self
+        QMessageBox.information(
+            self, "Gap Detected - Manual Selection Suggested",
+            f"Secilen iki yuz arasinda {gap:.2f} mm bosluk var ve yuzler birbirine bakiyor, "
+            "ancak otomatik olarak uygun bir edge cifti bulunamadi.\n\n"
+            "Bu geometri icin Manual mode'a gecip kaynak kenarini dogrudan secin."
         )
-        if dialog.exec_() == QDialog.Accepted:
-            selected = dialog.selected_indices()
-            if selected:
-                self._apply_gap_paths_as_body_paths(new_paths, selected)
 
     # ─── Add Segment ──────────────────────────────────────────────────
 
@@ -2651,7 +2139,7 @@ class MainWindow(QMainWindow):
             }
 
         return {
-            "version": "5.I",
+            "version": "5.K",
             "step_file": self.current_step_file,
             "welds": [
                 {

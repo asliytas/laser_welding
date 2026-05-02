@@ -34,12 +34,19 @@ from OCC.Core.BRepPrimAPI import (
     BRepPrimAPI_MakeSphere,
     BRepPrimAPI_MakeCone,
     BRepPrimAPI_MakeTorus,
+    BRepPrimAPI_MakePrism,
 )
 from OCC.Core.BRepAlgoAPI import BRepAlgoAPI_Cut
+from OCC.Core.BRepBuilderAPI import (
+    BRepBuilderAPI_MakeEdge,
+    BRepBuilderAPI_MakeFace,
+    BRepBuilderAPI_MakeWire,
+    BRepBuilderAPI_Transform,
+)
+from OCC.Core.GC import GC_MakeArcOfCircle
 from OCC.Core.gp import (
     gp_Pnt, gp_Ax1, gp_Ax2, gp_Dir, gp_Vec, gp_Trsf,
 )
-from OCC.Core.BRepBuilderAPI import BRepBuilderAPI_Transform
 from OCC.Core.STEPControl import STEPControl_Writer, STEPControl_AsIs
 from OCC.Core.IFSelect import IFSelect_RetDone
 
@@ -47,12 +54,56 @@ from OCC.Core.IFSelect import IFSelect_RetDone
 # ─── Çıktı klasörü ────────────────────────────────────────────────────────────
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "test_geometries")
 
+SAVE_NAME_OVERRIDES = {
+    "01_box_box_flat_touching.step": "OKEY/01_box_box_flat_touching.step",
+    "03_box_box_gap_3mm.step": "OKEY/02.A_box_box_gap_3mm.step",
+    "19_box_box_gap_0p5mm.step": "OKEY/02.B_box_box_gap_0p5mm.step",
+    "20_box_box_gap_4p8mm.step": "OKEY/02.C_box_box_gap_4p8mm.step",
+    "21_box_box_gap_6mm_too_far.step": "OKEY/02.D_box_box_gap_6mm_too_far.step",
+    "27_three_boxes_stacked_two_gaps.step": "OKEY/2.E_three_boxes_stacked_two_gaps.step",
+    "04_box_box_partial_shifted.step": "OKEY/03_box_box_partial_shifted.step",
+    "05_t_joint.step": "OKEY/04_t_joint.step",
+    "06_l_joint.step": "OKEY/05_l_joint.step",
+    "07_cylinder_on_plate.step": "OKEY/06_cylinder_on_plate.step",
+    "09_coaxial_cylinders_reducer.step": "OKEY/08_coaxial_cylinders_reducer.step",
+    "10_cylinder_cylinder_side_tangent.step": "OKEY/09_cylinder_cylinder_side_tangent.step",
+    "12_sphere_on_plate.step": "OKEY/10_sphere_on_plate.step",
+    "13_sphere_sphere_tangent.step": "OKEY/11_sphere_sphere_tangent.step",
+    "14_flange_to_flange.step": "OKEY/12_flange_to_flange.step",
+    "15_torus_on_plate.step": "OKEY/13_torus_on_plate.step",
+    "22_box_box_corner_touch_only.step": "OKEY/14_box_box_corner_touch_only.step",
+    "23_box_box_edge_touch_only.step": "OKEY/15_box_box_edge_touch_only.step",
+    "33_arc_rail_radial_touch.step": "OKEY/30_arc_rail_radial_touch.step",
+
+    "25_box_box_partial_side_gap_3mm.step": "16_box_box_partial_side_gap_3mm.step",
+    "26_box_box_offset_gap_3mm.step": "23_box_box_offset_gap_3mm.step",
+    "29_cylinder_on_plate_gap_2mm.step": "26_cylinder_on_plate_gap_2mm.step",
+    "31_t_joint_gap_2mm.step": "28_t_joint_gap_2mm.step",
+    "34_arc_rail_radial_gap_2mm.step": "31_arc_rail_radial_gap_2mm.step",
+    "35_arc_rail_staggered_gap.step": "32_arc_rail_staggered_gap.step",
+    "36_arc_rail_three_body_chain.step": "33_arc_rail_three_body_chain.step",
+    "37_v_joint_open_angle.step": "34_v_joint_open_angle.step",
+    "38_stepped_blocks_multi_height.step": "35_stepped_blocks_multi_height.step",
+    "39_box_box_overlap_1mm.step": "36_box_box_overlap_1mm.step",
+    "40_box_on_cylinder_saddle_overlap.step": "37_box_on_cylinder_saddle_overlap.step",
+    "41_two_plates_cross_overlap.step": "38_two_plates_cross_overlap.step",
+    "32_angled_plate_gap_3mm.step": "39_angled_plate_gap_3mm.step",
+    "16_angled_butt_joint.step": "45_angled_butt_joint.step",
+    "08_cylinder_in_hole_clearance.step": "47_cylinder_in_hole_clearance.step",
+    "11_cone_on_plate.step": "50_cone_on_plate.step",
+    "28_cylinder_in_hole_clearance_3mm.step": "55_cylinder_in_hole_clearance_3mm.step",
+    "30_cone_on_plate_gap_2mm.step": "57_cone_on_plate_gap_2mm.step",
+}
 
 # ─── Yardımcı fonksiyonlar ────────────────────────────────────────────────────
 
 def save_step(filename, *shapes):
     """Birden fazla solid'i tek STEP dosyasına yaz (her biri ayrı body)."""
     os.makedirs(OUTPUT_DIR, exist_ok=True)
+    filename = SAVE_NAME_OVERRIDES.get(filename, filename)
+    out_dir = os.path.dirname(os.path.join(OUTPUT_DIR, filename))
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     filepath = os.path.join(OUTPUT_DIR, filename)
     writer = STEPControl_Writer()
     for shape in shapes:
@@ -61,6 +112,16 @@ def save_step(filename, *shapes):
     status = "OK  " if ok else "FAIL"
     print(f"  [{status}]  {filename}")
     return ok
+
+
+def clean_output_steps():
+    """Klasorleri koruyarak mevcut STEP/STP dosyalarini temizle."""
+    if not os.path.isdir(OUTPUT_DIR):
+        return
+    for root, _, files in os.walk(OUTPUT_DIR):
+        for name in files:
+            if name.lower().endswith((".step", ".stp")):
+                os.remove(os.path.join(root, name))
 
 
 def box(dx, dy, dz, x=0.0, y=0.0, z=0.0):
@@ -90,6 +151,41 @@ def torus(R, r, x=0.0, y=0.0, z=0.0):
     return BRepPrimAPI_MakeTorus(ax, R, r).Shape()
 
 
+def annular_sector(r_inner, r_outer, angle_deg, thickness,
+                   x=0.0, y=0.0, z=0.0, start_deg=0.0):
+    """XY duzleminde halka dilimi olustur ve Z yonunde kalinlik ver."""
+    a0 = math.radians(start_deg)
+    a1 = math.radians(start_deg + angle_deg)
+    am = (a0 + a1) / 2.0
+
+    def pt(radius, angle):
+        return gp_Pnt(x + radius * math.cos(angle),
+                      y + radius * math.sin(angle),
+                      z)
+
+    outer0 = pt(r_outer, a0)
+    outerm = pt(r_outer, am)
+    outer1 = pt(r_outer, a1)
+    inner0 = pt(r_inner, a0)
+    innerm = pt(r_inner, am)
+    inner1 = pt(r_inner, a1)
+
+    outer_arc = BRepBuilderAPI_MakeEdge(
+        GC_MakeArcOfCircle(outer0, outerm, outer1).Value()
+    ).Edge()
+    radial_end = BRepBuilderAPI_MakeEdge(outer1, inner1).Edge()
+    inner_arc = BRepBuilderAPI_MakeEdge(
+        GC_MakeArcOfCircle(inner1, innerm, inner0).Value()
+    ).Edge()
+    radial_start = BRepBuilderAPI_MakeEdge(inner0, outer0).Edge()
+
+    wire = BRepBuilderAPI_MakeWire(
+        outer_arc, radial_end, inner_arc, radial_start
+    ).Wire()
+    face = BRepBuilderAPI_MakeFace(wire).Face()
+    return BRepPrimAPI_MakePrism(face, gp_Vec(0, 0, thickness)).Shape()
+
+
 def cut(shape_a, shape_b):
     return BRepAlgoAPI_Cut(shape_a, shape_b).Shape()
 
@@ -104,6 +200,22 @@ def rotate_z(shape, angle_deg, cx=0.0, cy=0.0, cz=0.0):
     """shape'i (cx,cy,cz) noktasından geçen Z ekseni etrafında döndür."""
     trsf = gp_Trsf()
     ax = gp_Ax1(gp_Pnt(cx, cy, cz), gp_Dir(0, 0, 1))
+    trsf.SetRotation(ax, math.radians(angle_deg))
+    return BRepBuilderAPI_Transform(shape, trsf, True).Shape()
+
+
+def rotate_x(shape, angle_deg, cx=0.0, cy=0.0, cz=0.0):
+    """Rotate shape around X axis through (cx, cy, cz)."""
+    trsf = gp_Trsf()
+    ax = gp_Ax1(gp_Pnt(cx, cy, cz), gp_Dir(1, 0, 0))
+    trsf.SetRotation(ax, math.radians(angle_deg))
+    return BRepBuilderAPI_Transform(shape, trsf, True).Shape()
+
+
+def rotate_y(shape, angle_deg, cx=0.0, cy=0.0, cz=0.0):
+    """Rotate shape around Y axis through (cx, cy, cz)."""
+    trsf = gp_Trsf()
+    ax = gp_Ax1(gp_Pnt(cx, cy, cz), gp_Dir(0, 1, 0))
     trsf.SetRotation(ax, math.radians(angle_deg))
     return BRepBuilderAPI_Transform(shape, trsf, True).Shape()
 
@@ -129,7 +241,7 @@ def t02_box_box_overlap_1mm():
     """
     a = box(50, 30, 20)
     b = box(50, 30, 20, z=19)          # 1 mm içine giriyor
-    save_step("02_box_box_overlap_1mm.step", a, b)
+    save_step("39_box_box_overlap_1mm.step", a, b)
 
 
 def t03_box_box_gap_3mm():
@@ -326,7 +438,7 @@ def t17_box_on_cylinder_saddle():
 
     # Kutu: silindirin üstüne 2mm giriyor (overlap → Section çalışır)
     blk = box(30, 30, 30, x=35, y=35, z=48)  # z=48 → z=50'ye kadar, sil z=50'de
-    save_step("17_box_on_cylinder_saddle.step", cyl, blk)
+    save_step("40_box_on_cylinder_saddle_overlap.step", cyl, blk)
 
 
 def t18_two_plates_overlapping_cross():
@@ -343,31 +455,201 @@ def t18_two_plates_overlapping_cross():
     plate_b = rotate_z(plate_b_raw, 90)
 
     # Her ikisi z=0..4 aralığında, birbiriyle kesişiyor
-    save_step("18_two_plates_cross.step", plate_a, plate_b)
+    save_step("41_two_plates_cross_overlap.step", plate_a, plate_b)
 
 
 # ─── Ana program ──────────────────────────────────────────────────────────────
 
+def t19_box_box_gap_0p5mm():
+    """Very small face-to-face gap (0.5 mm)."""
+    a = box(50, 30, 20)
+    b = box(50, 30, 20, z=20.5)
+    save_step("19_box_box_gap_0p5mm.step", a, b)
+
+
+def t20_box_box_gap_4p8mm():
+    """Near-threshold gap (4.8 mm), still inside automatic proposal range."""
+    a = box(50, 30, 20)
+    b = box(50, 30, 20, z=24.8)
+    save_step("20_box_box_gap_4p8mm.step", a, b)
+
+
+def t21_box_box_gap_6mm_too_far():
+    """Gap outside threshold (6 mm). Expected: too-far dialog."""
+    a = box(50, 30, 20)
+    b = box(50, 30, 20, z=26.0)
+    save_step("21_box_box_gap_6mm_too_far.step", a, b)
+
+
+def t22_box_box_corner_touch_only():
+    """Only one corner point touches. Expected: no shared edge."""
+    a = box(30, 30, 30)
+    b = box(20, 20, 20, x=30, y=30, z=30)
+    save_step("22_box_box_corner_touch_only.step", a, b)
+
+
+def t23_box_box_edge_touch_only():
+    """Bodies touch along one edge only."""
+    a = box(40, 40, 20)
+    b = box(20, 20, 20, x=40, y=40, z=0)
+    save_step("23_box_box_edge_touch_only.step", a, b)
+
+
+def t24_box_box_side_gap_3mm():
+    """Two boxes facing each other through a side gap."""
+    a = box(30, 50, 25)
+    b = box(30, 50, 25, x=33)
+    save_step("24_box_box_side_gap_3mm.step", a, b)
+
+
+def t25_box_box_partial_side_gap_3mm():
+    """Side gap with partial overlap in Y."""
+    a = box(30, 60, 25)
+    b = box(30, 30, 25, x=33, y=15)
+    save_step("25_box_box_partial_side_gap_3mm.step", a, b)
+
+
+def t26_box_box_offset_gap_3mm():
+    """Z-gap plus XY offset: projected faces overlap partly."""
+    a = box(60, 40, 20)
+    b = box(40, 30, 20, x=10, y=5, z=23)
+    save_step("26_box_box_offset_gap_3mm.step", a, b)
+
+
+def t27_three_boxes_stacked_two_gaps():
+    """Three separate bodies with two 2 mm gaps."""
+    a = box(45, 30, 15)
+    b = box(45, 30, 15, z=17)
+    c = box(45, 30, 15, z=34)
+    save_step("27_three_boxes_stacked_two_gaps.step", a, b, c)
+
+
+def t28_cylinder_in_hole_large_clearance_3mm():
+    """Cylinder in hole with 3 mm radial clearance."""
+    block = box(70, 70, 22)
+    drill = cylinder(r=16.0, h=26, x=35, y=35, z=-2)
+    block_hole = cut(block, drill)
+    pin = cylinder(r=13.0, h=34, x=35, y=35, z=-6)
+    save_step("28_cylinder_in_hole_clearance_3mm.step", block_hole, pin)
+
+
+def t29_cylinder_on_plate_gap_2mm():
+    """Cylinder hovering 2 mm above a plate."""
+    plate = box(100, 100, 10)
+    cyl = cylinder(r=15, h=35, x=50, y=50, z=12)
+    save_step("29_cylinder_on_plate_gap_2mm.step", plate, cyl)
+
+
+def t30_cone_on_plate_gap_2mm():
+    """Cone hovering 2 mm above a plate."""
+    plate = box(120, 120, 10)
+    cn = cone(r_base=20, r_top=0, h=40, x=60, y=60, z=12)
+    save_step("30_cone_on_plate_gap_2mm.step", plate, cn)
+
+
+def t31_t_joint_gap_2mm():
+    """T-joint vertical plate lifted by 2 mm."""
+    base = box(80, 60, 10)
+    vertical = box(80, 8, 40, y=26, z=12)
+    save_step("31_t_joint_gap_2mm.step", base, vertical)
+
+
+def t32_angled_plate_gap_3mm():
+    """Angled plate above base with a 3 mm gap."""
+    base = box(90, 60, 8)
+    plate = box(70, 12, 35, x=10, y=24, z=11)
+    plate = rotate_z(plate, 18, cx=45, cy=30, cz=11)
+    save_step("32_angled_plate_gap_3mm.step", base, plate)
+
+
+def t33_arc_rail_radial_touch():
+    """Two annular-sector rails sharing a curved radial seam."""
+    inner = annular_sector(20, 30, 105, 8, x=0, y=0, z=0, start_deg=15)
+    outer = annular_sector(30, 42, 105, 8, x=0, y=0, z=0, start_deg=15)
+    save_step("33_arc_rail_radial_touch.step", inner, outer)
+
+
+def t34_arc_rail_radial_gap_2mm():
+    """Two annular-sector rails separated by a 2 mm curved gap."""
+    inner = annular_sector(20, 30, 105, 8, x=0, y=0, z=0, start_deg=15)
+    outer = annular_sector(32, 44, 105, 8, x=0, y=0, z=0, start_deg=15)
+    save_step("34_arc_rail_radial_gap_2mm.step", inner, outer)
+
+
+def t35_arc_rail_staggered_gap():
+    """Curved rails with partial angular overlap and a radial gap."""
+    inner = annular_sector(18, 30, 120, 8, x=0, y=0, z=0, start_deg=0)
+    outer = annular_sector(33, 45, 80, 8, x=0, y=0, z=0, start_deg=25)
+    save_step("35_arc_rail_staggered_gap.step", inner, outer)
+
+
+def t36_arc_rail_three_body_chain():
+    """Three curved rail bodies: two curved seams in one STEP file."""
+    a = annular_sector(15, 25, 95, 8, x=0, y=0, z=0, start_deg=10)
+    b = annular_sector(25, 35, 95, 8, x=0, y=0, z=0, start_deg=10)
+    c = annular_sector(37, 47, 95, 8, x=0, y=0, z=0, start_deg=10)
+    save_step("36_arc_rail_three_body_chain.step", a, b, c)
+
+
+def t37_v_joint_open_angle():
+    """Two plates forming a V-joint with an open angled seam."""
+    left = box(70, 12, 35, x=-35, y=-6, z=0)
+    right = box(70, 12, 35, x=-35, y=-6, z=0)
+    left = rotate_z(left, -18, cx=0, cy=0, cz=0)
+    right = rotate_z(right, 18, cx=0, cy=0, cz=0)
+    right = translate(right, 0, 3, 0)
+    save_step("37_v_joint_open_angle.step", left, right)
+
+
+def t38_stepped_blocks_multi_height():
+    """Three stepped blocks with different heights and two candidate seams."""
+    a = box(35, 40, 12, x=0, y=0, z=0)
+    b = box(35, 40, 22, x=35, y=0, z=0)
+    c = box(35, 40, 16, x=70, y=0, z=0)
+    save_step("38_stepped_blocks_multi_height.step", a, b, c)
+
+
 TESTS = [
-    # (açıklama, fonksiyon)
-    ("01  Box-Box flat touching              [closed rect,  KOLAY]", t01_box_box_flat_touching),
-    ("02  Box-Box 1mm overlap                [closed rect,  KOLAY]", t02_box_box_overlap_1mm),
-    ("03  Box-Box 3mm gap                    [closed rect,  ORTA] ", t03_box_box_gap_3mm),
-    ("04  Box-Box partial shifted            [closed poly,  ORTA] ", t04_box_box_partial_shifted),
-    ("05  T-joint                            [open line,    KOLAY]", t05_t_joint),
-    ("06  L-joint                            [open line,    KOLAY]", t06_l_joint),
-    ("07  Cylinder on plate                  [closed circle,ORTA] ", t07_cylinder_on_plate),
-    ("08  Cylinder in hole (0.2mm gap)       [closed circle,ZOR]  ", t08_cylinder_in_hole_clearance),
-    ("09  Coaxial cylinders reducer          [closed circle,ORTA] ", t09_coaxial_cylinders_reducer),
-    ("10  Cylinders side tangent             [line/FAIL,    ÇOK ZOR]", t10_cylinder_cylinder_side_tangent),
-    ("11  Cone on plate                      [closed circle,ORTA] ", t11_cone_on_plate),
-    ("12  Sphere on plate                    [FAIL graceful,TEST] ", t12_sphere_on_plate),
-    ("13  Sphere-sphere tangent              [FAIL graceful,TEST] ", t13_sphere_sphere_tangent),
-    ("14  Flange-to-flange                   [ring closed,  ZOR]  ", t14_flange_to_flange),
-    ("15  Torus on plate                     [circle,       ÇOK ZOR]", t15_torus_on_plate),
-    ("16  Angled butt joint 45°              [open line,    ZOR]  ", t16_angled_butt_joint),
-    ("17  Box on cylinder (saddle)           [arc,          ZOR]  ", t17_box_on_cylinder_saddle),
-    ("18  Two plates cross                   [X-shape,      ORTA] ", t18_two_plates_overlapping_cross),
+    # OKEY klasoru: referans / beklendigi gibi davranan testler
+    ("OKEY/01  Box-Box flat touching", t01_box_box_flat_touching),
+    ("OKEY/02.A Box-Box 3mm gap", t03_box_box_gap_3mm),
+    ("OKEY/02.B Box-Box 0.5mm gap", t19_box_box_gap_0p5mm),
+    ("OKEY/02.C Box-Box 4.8mm gap", t20_box_box_gap_4p8mm),
+    ("OKEY/02.D Box-Box 6mm too far", t21_box_box_gap_6mm_too_far),
+    ("OKEY/2.E Three boxes, two gaps", t27_three_boxes_stacked_two_gaps),
+    ("OKEY/03  Box-Box partial shifted", t04_box_box_partial_shifted),
+    ("OKEY/04  T-joint", t05_t_joint),
+    ("OKEY/05  L-joint", t06_l_joint),
+    ("OKEY/06  Cylinder on plate", t07_cylinder_on_plate),
+    ("OKEY/08  Coaxial cylinders reducer", t09_coaxial_cylinders_reducer),
+    ("OKEY/09  Cylinders side tangent", t10_cylinder_cylinder_side_tangent),
+    ("OKEY/10  Sphere on plate", t12_sphere_on_plate),
+    ("OKEY/11  Sphere-sphere tangent", t13_sphere_sphere_tangent),
+    ("OKEY/12  Flange-to-flange", t14_flange_to_flange),
+    ("OKEY/13  Torus on plate", t15_torus_on_plate),
+    ("OKEY/14  Box-Box corner touch", t22_box_box_corner_touch_only),
+    ("OKEY/15  Box-Box edge touch", t23_box_box_edge_touch_only),
+    ("OKEY/30  Arc rail radial touch", t33_arc_rail_radial_touch),
+
+    # Root klasor: zor / manuel / deneysel / problemli grup
+    ("16  Partial side gap 3mm", t25_box_box_partial_side_gap_3mm),
+    ("23  Offset Z-gap 3mm", t26_box_box_offset_gap_3mm),
+    ("26  Cylinder on plate 2mm gap", t29_cylinder_on_plate_gap_2mm),
+    ("28  T-joint 2mm gap", t31_t_joint_gap_2mm),
+    ("31  Arc rail radial gap 2mm", t34_arc_rail_radial_gap_2mm),
+    ("32  Arc rail staggered gap", t35_arc_rail_staggered_gap),
+    ("33  Arc rail three-body chain", t36_arc_rail_three_body_chain),
+    ("34  V-joint open angle", t37_v_joint_open_angle),
+    ("35  Stepped blocks multi-height", t38_stepped_blocks_multi_height),
+    ("36  Box-Box 1mm overlap", t02_box_box_overlap_1mm),
+    ("37  Box on cylinder saddle overlap", t17_box_on_cylinder_saddle),
+    ("38  Two plates cross overlap", t18_two_plates_overlapping_cross),
+    ("39  Angled plate 3mm gap", t32_angled_plate_gap_3mm),
+    ("45  Angled butt joint", t16_angled_butt_joint),
+    ("47  Cylinder in hole clearance", t08_cylinder_in_hole_clearance),
+    ("50  Cone on plate", t11_cone_on_plate),
+    ("55  Cylinder in hole 3mm clearance", t28_cylinder_in_hole_large_clearance_3mm),
+    ("57  Cone on plate 2mm gap", t30_cone_on_plate_gap_2mm),
 ]
 
 
@@ -377,6 +659,8 @@ if __name__ == "__main__":
     print(f"  Çıktı: {OUTPUT_DIR}")
     print("=" * 65)
     print()
+
+    clean_output_steps()
 
     passed, failed = 0, 0
     for desc, fn in TESTS:
@@ -393,10 +677,10 @@ if __name__ == "__main__":
     print(f"  Sonuç: {passed} başarılı / {failed} hatalı / {len(TESTS)} toplam")
     print("=" * 65)
     print()
-    print("  Test sirasi onerisi (main_updated_4.B.py ile):")
-    print("  1. 01, 02 -> Section calismali (baseline)")
-    print("  2. 07, 09 -> Proximity devreye girmeli")
-    print("  3. 08     -> ZOR: coincident surface")
-    print("  4. 12, 13 -> Graceful failure (nokta temas mesaji)")
-    print("  5. 03     -> Gap detection")
-    print("  6. 14, 17 -> Karmasik geometriler")
+    print("  Test sirasi onerisi:")
+    print("  1. 01, 04, 05 -> baseline touching/shared-edge")
+    print("  2. 02, 16, 17, 21 -> planar gap detection")
+    print("  3. 19, 20 -> point/edge-only graceful handling")
+    print("  4. 30-33 -> arc/yay yapilari")
+    print("  5. 34, 35 -> ek karmasik multi-body/angled yapilar")
+    print("  6. 36-38 -> overlap/cross/intersection testleri (en son)")
