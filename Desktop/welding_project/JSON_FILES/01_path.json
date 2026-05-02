@@ -1,0 +1,86 @@
+{
+  "version": "5.K",
+  "step_file": "C:/Users/ASUS/Desktop/welding_project/Desktop/welding_project/phase1/test_geometries/OKEY/01_box_box_flat_touching.step",
+  "welds": [
+    {
+      "id": 1,
+      "name": "Path 1",
+      "context": "geometric",
+      "segments": [
+        {
+          "index": 1,
+          "type": "Arc / single segment",
+          "method": "Geometric coincident",
+          "length": 30.0,
+          "start_point": [
+            50.0,
+            0.0,
+            20.0
+          ],
+          "end_point": [
+            50.0,
+            30.0,
+            20.0
+          ],
+          "is_closed": false,
+          "reversed_for_continuity": false
+        },
+        {
+          "index": 2,
+          "type": "Arc / single segment",
+          "method": "Geometric coincident",
+          "length": 50.0,
+          "start_point": [
+            50.0,
+            30.0,
+            20.0
+          ],
+          "end_point": [
+            0.0,
+            30.0,
+            20.0
+          ],
+          "is_closed": false,
+          "reversed_for_continuity": false
+        },
+        {
+          "index": 3,
+          "type": "Arc / single segment",
+          "method": "Geometric coincident",
+          "length": 30.0,
+          "start_point": [
+            0.0,
+            30.0,
+            20.0
+          ],
+          "end_point": [
+            0.0,
+            0.0,
+            20.0
+          ],
+          "is_closed": false,
+          "reversed_for_continuity": false
+        },
+        {
+          "index": 4,
+          "type": "Arc / single segment",
+          "method": "Geometric coincident",
+          "length": 50.0,
+          "start_point": [
+            0.0,
+            0.0,
+            20.0
+          ],
+          "end_point": [
+            50.0,
+            0.0,
+            20.0
+          ],
+          "is_closed": false,
+          "reversed_for_continuity": false
+        }
+      ]
+    }
+  ],
+  "total_length": 160.0
+}

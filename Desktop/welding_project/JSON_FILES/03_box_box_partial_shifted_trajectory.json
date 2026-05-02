@@ -1,0 +1,88 @@
+{
+  "version": "5.K",
+  "step_file": "C:/Users/ASUS/Desktop/welding_project/Desktop/welding_project/phase1/test_geometries/OKEY/03_box_box_partial_shifted.step",
+  "welds": [
+    {
+      "id": 1,
+      "name": "Path 1",
+      "context": "section",
+      "segments": [
+        {
+          "index": 1,
+          "type": "Arc / single segment",
+          "method": "Section",
+          "length": 40.0,
+          "start_point": [
+            60.0,
+            40.0,
+            20.0
+          ],
+          "end_point": [
+            60.0,
+            0.0,
+            20.0
+          ],
+          "is_closed": false,
+          "reversed_for_continuity": false
+        },
+        {
+          "index": 2,
+          "type": "Arc / single segment",
+          "method": "Section",
+          "length": 30.0,
+          "start_point": [
+            60.0,
+            0.0,
+            20.0
+          ],
+          "end_point": [
+            30.0,
+            0.0,
+            20.0
+          ],
+          "is_closed": false,
+          "reversed_for_continuity": false
+        },
+        {
+          "index": 3,
+          "type": "Arc / single segment",
+          "method": "Section",
+          "length": 40.0,
+          "start_point": [
+            30.0,
+            0.0,
+            20.0
+          ],
+          "end_point": [
+            30.0,
+            40.0,
+            20.0
+          ],
+          "is_closed": false,
+          "reversed_for_continuity": false
+        },
+        {
+          "index": 4,
+          "type": "Arc / single segment",
+          "method": "Section",
+          "length": 30.0,
+          "start_point": [
+            30.0,
+            40.0,
+            20.0
+          ],
+          "end_point": [
+            60.0,
+            40.0,
+            20.0
+          ],
+          "is_closed": false,
+          "reversed_for_continuity": false
+        }
+      ]
+    }
+  ],
+  "total_length": 140.0,
+  "export_purpose": "trajectory_planning",
+  "note": "Faz 4'te WeldPoint listesine genişletilecek."
+}
