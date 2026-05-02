@@ -1,13 +1,3 @@
-"""
-Robotic Laser Welding - Phase 3 (main_updated_5.K.py)
-
-5.K is a simplified branch of 5.I:
-- keeps shared-edge, coincident-edge, section fallback, point-contact, and facing-face gap edge-pair flows
-- removes the older path-based bridging fallback layer
-- for separated bodies whose selected faces do not oppose each other, suggests Manual mode
-"""
-
-
 import sys
 import json
 import time
