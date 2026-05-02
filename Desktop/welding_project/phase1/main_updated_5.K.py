@@ -305,6 +305,7 @@ class MainWindow(QMainWindow):
 
         self.manual_edges = []
         self.manual_ais_list = []
+        self.manual_pending_segments = []
 
         self.welds = []
         self.active_weld_id = None
@@ -555,6 +556,18 @@ class MainWindow(QMainWindow):
         self.btn_add_segment.setEnabled(False)
         v.addWidget(self.btn_add_segment)
 
+        self.btn_clear_edges = QPushButton("Clear Edges")
+        self.btn_clear_edges.clicked.connect(self._clear_manual_edges)
+        self.btn_clear_edges.setVisible(False)
+        v.addWidget(self.btn_clear_edges)
+
+        self.btn_apply_manual = QPushButton("Apply Manual Path")
+        self.btn_apply_manual.setToolTip("Commit selected manual segments to the active path")
+        self.btn_apply_manual.clicked.connect(self.apply_manual)
+        self.btn_apply_manual.setEnabled(False)
+        self.btn_apply_manual.setVisible(False)
+        v.addWidget(self.btn_apply_manual)
+
         seg_header_layout = QHBoxLayout()
         self.lbl_segments = QLabel("Segments: 0  |  Total: 0.0 mm")
         self.lbl_segments.setStyleSheet(
@@ -634,20 +647,10 @@ class MainWindow(QMainWindow):
         v.addWidget(weld_box)
         self.weld_box = weld_box
 
-        self.btn_clear_edges = QPushButton("Clear Edges")
-        self.btn_clear_edges.clicked.connect(self._clear_manual_edges)
-        self.btn_clear_edges.setVisible(False)
-        v.addWidget(self.btn_clear_edges)
-
-        self.btn_apply_manual = QPushButton("Apply Manual Path")
-        self.btn_apply_manual.clicked.connect(self.apply_manual)
-        self.btn_apply_manual.setEnabled(False)
-        self.btn_apply_manual.setVisible(False)
-        v.addWidget(self.btn_apply_manual)
-
         self.lbl_path = QLabel("")
         self.lbl_path.setWordWrap(True)
         self.lbl_path.setStyleSheet("padding: 4px; color: #222;")
+        self.lbl_path.setVisible(False)
         v.addWidget(self.lbl_path)
 
         v.addStretch()
@@ -677,21 +680,28 @@ class MainWindow(QMainWindow):
                       self.btn_clear_segments, self.btn_reset_faces,
                       self.btn_delete_segment, self.btn_move_up,
                       self.btn_move_down, self.lbl_face_a, self.lbl_face_b,
-                      self.lbl_segments, self.lbl_legend, self.segment_list,
-                      self.weld_box):
+                      self.lbl_proximity, self.lbl_segments, self.lbl_legend,
+                      self.segment_list, self.weld_box):
                 w.setVisible(True)
             self.btn_clear_edges.setVisible(False)
             self.btn_apply_manual.setVisible(False)
         else:
             self._activate_selection_mode(SEL_MODE_EDGE)
-            for w in (self.btn_add_segment, self.btn_finish, self.btn_undo,
-                      self.btn_clear_segments, self.btn_delete_segment,
-                      self.btn_move_up, self.btn_move_down,
-                      self.lbl_face_a, self.lbl_face_b, self.lbl_segments,
-                      self.lbl_legend, self.segment_list, self.weld_box):
-                w.setVisible(False)
-            self.btn_clear_edges.setVisible(True)
-            self.btn_apply_manual.setVisible(True)
+            self.btn_add_segment.setVisible(False)
+            self.btn_reset_faces.setVisible(False)
+            self.lbl_proximity.setVisible(False)
+            self.lbl_proximity.setText("")
+            self.lbl_face_a.setVisible(False)
+            self.lbl_face_b.setVisible(False)
+            for w in (self.btn_finish, self.btn_undo, self.btn_clear_segments,
+                      self.btn_delete_segment, self.btn_move_up,
+                      self.btn_move_down, self.lbl_segments, self.lbl_legend,
+                      self.segment_list, self.weld_box):
+                w.setVisible(True)
+            self.btn_clear_edges.setVisible(False)
+            self.btn_apply_manual.setVisible(False)
+        self._rebuild_segment_list()
+        self._update_segments_label()
         self._update_status()
 
     # ─── File loading ──────────────────────────────────────────────────
@@ -723,6 +733,7 @@ class MainWindow(QMainWindow):
         self.face_b = None
         self.manual_edges.clear()
         self.manual_ais_list.clear()
+        self.manual_pending_segments.clear()
         self.welds.clear()
         self.active_weld_id = None
         self._sync_collected_segments()
@@ -855,14 +866,32 @@ class MainWindow(QMainWindow):
             return
         length = _edge_length(edge)
         print(f"[PICK] Manual edge: {length:.2f} mm")
+        segments = self._manual_segments_from_edges([(edge, length)])
+        if not segments:
+            QMessageBox.warning(
+                self, "Path Error",
+                "Could not build a segment from the selected edge."
+            )
+            return
+
+        if self.active_weld_id is None:
+            self._create_new_weld(name=None, context="manual")
+        active = self._active_weld()
+        if active is None:
+            return
+
         self.manual_edges.append(edge)
-        ais = AIS_Shape(edge)
-        ais.SetColor(self.COLOR_CYAN)
-        ais.SetWidth(4.0)
-        self.viewer._display.GetContext().Display(ais, True)
-        self.manual_ais_list.append(ais)
-        self.btn_apply_manual.setEnabled(True)
-        self.lbl_status.setText(f"Edges collected: {len(self.manual_edges)}")
+        for seg in segments:
+            active["context"] = "manual"
+            self._display_segment_for_weld(active, seg)
+        self.manual_edges.clear()
+        self.viewer._display.Repaint()
+        self._auto_order_active_weld()
+        self._rebuild_segment_list()
+        self._refresh_weld_list()
+        self._update_segments_label()
+        self._update_status_bar()
+        self._update_status()
 
     # ─── Reset / clear ─────────────────────────────────────────────────
 
@@ -898,12 +927,19 @@ class MainWindow(QMainWindow):
         ctx = self.viewer._display.GetContext()
         for ais in self.manual_ais_list:
             ctx.Remove(ais, False)
+        for seg in self.manual_pending_segments:
+            for ais in seg.get("preview_ais_list", []):
+                ctx.Remove(ais, False)
         self.viewer._display.Repaint()
         self.manual_edges.clear()
         self.manual_ais_list.clear()
+        self.manual_pending_segments.clear()
         self.btn_apply_manual.setEnabled(False)
+        self._rebuild_segment_list()
+        self._update_segments_label()
+        self._update_status_bar()
         if self.radio_manual.isChecked():
-            self.lbl_status.setText("Manual mode:\nClick edges on the model.")
+            self._update_status()
 
     # ─── Validation ────────────────────────────────────────────────────
 
@@ -1395,6 +1431,60 @@ class MainWindow(QMainWindow):
             return "Arc / single segment"
         return "Open path"
 
+    def _segment_from_wire_info(self, wire_info, method_used="Manual"):
+        start_pt, end_pt, is_closed = _wire_endpoints(wire_info["wire"])
+        return {
+            "wires": [wire_info],
+            "ais_list": [],
+            "method": method_used,
+            "length": wire_info["length"],
+            "type": self._path_type_label(wire_info),
+            "start_point": start_pt,
+            "end_point": end_pt,
+            "is_closed": is_closed,
+        }
+
+    def _manual_segments_from_edges(self, edges_info):
+        wires = self._build_wires(edges_info)
+        if not wires and len(edges_info) > 1:
+            wires = []
+            for edge, length in edges_info:
+                wires.extend(self._build_wires([(edge, length)]))
+        return [
+            self._segment_from_wire_info(w, "Manual")
+            for w in wires
+            if w.get("length", 0.0) >= EDGE_MIN_LENGTH
+        ]
+
+    def _display_manual_preview_segment(self, seg):
+        ctx = self.viewer._display.GetContext()
+        idx = len(self.manual_pending_segments)
+        color = self._segment_color(idx)
+        ais_list = []
+        for w in seg["wires"]:
+            ais = AIS_Shape(w["wire"])
+            ais.SetColor(color)
+            ais.SetWidth(5.0)
+            ctx.Display(ais, False)
+            ais_list.append(ais)
+        seg["preview_ais_list"] = ais_list
+        self.viewer._display.Repaint()
+
+    def _remove_manual_preview_segment(self, seg):
+        ctx = self.viewer._display.GetContext()
+        for ais in seg.get("preview_ais_list", []):
+            ctx.Remove(ais, False)
+        seg["preview_ais_list"] = []
+
+    def _reassign_manual_preview_colors(self):
+        ctx = self.viewer._display.GetContext()
+        for i, seg in enumerate(self.manual_pending_segments):
+            color = self._segment_color(i)
+            for ais in seg.get("preview_ais_list", []):
+                ctx.SetColor(ais, color, True)
+                ctx.SetWidth(ais, 5.0, True)
+        self.viewer._display.Repaint()
+
     def _method_human_label(self, method):
         """Internal method name → operatör için anlaşılır kısa etiket."""
         if method == "Topological shared":
@@ -1883,13 +1973,18 @@ class MainWindow(QMainWindow):
     # ─── Segment list widget ──────────────────────────────────────────
 
     def _rebuild_segment_list(self):
-        segments = self._active_segments()
+        manual_preview = self.radio_manual.isChecked() and bool(self.manual_pending_segments)
+        segments = self.manual_pending_segments if manual_preview else self._active_segments()
         self.segment_list.blockSignals(True)
         self.segment_list.clear()
-        _, _, gap_list = self._continuity_summary()
+        gap_list = []
+        if not manual_preview:
+            _, _, gap_list = self._continuity_summary()
         for i, seg in enumerate(segments):
             method_label = self._method_human_label(seg.get("method", ""))
             text = f"Segment {i + 1} — {seg['length']:.1f} mm — {method_label}"
+            if manual_preview:
+                text = f"Selected {text}"
             item = QListWidgetItem(text)
             item.setForeground(QBrush(self._segment_color_qt(i)))
             method = seg.get("method", "")
@@ -1928,14 +2023,25 @@ class MainWindow(QMainWindow):
             return
         self.btn_delete_segment.setEnabled(True)
         self.btn_move_up.setEnabled(idx > 0)
-        self.btn_move_down.setEnabled(idx < len(self._active_segments()) - 1)
+        segments = (
+            self.manual_pending_segments
+            if self.radio_manual.isChecked() and self.manual_pending_segments
+            else self._active_segments()
+        )
+        self.btn_move_down.setEnabled(idx < len(segments) - 1)
         self._highlight_segment(idx)
 
     def _highlight_segment(self, highlight_idx):
         ctx = self.viewer._display.GetContext()
-        for i, seg in enumerate(self._active_segments()):
+        segments = (
+            self.manual_pending_segments
+            if self.radio_manual.isChecked() and self.manual_pending_segments
+            else self._active_segments()
+        )
+        ais_key = "preview_ais_list" if segments is self.manual_pending_segments else "ais_list"
+        for i, seg in enumerate(segments):
             w = 8.0 if i == highlight_idx else 5.0
-            for ais in seg["ais_list"]:
+            for ais in seg.get(ais_key, []):
                 ctx.SetWidth(ais, w, True)
         self.viewer._display.Repaint()
 
@@ -1953,6 +2059,21 @@ class MainWindow(QMainWindow):
         if not items:
             return
         idx = items[0].data(Qt.UserRole)
+        if self.radio_manual.isChecked() and self.manual_pending_segments:
+            if idx is None or idx < 0 or idx >= len(self.manual_pending_segments):
+                return
+            seg = self.manual_pending_segments.pop(idx)
+            self._remove_manual_preview_segment(seg)
+            if idx < len(self.manual_edges):
+                self.manual_edges.pop(idx)
+            self.btn_apply_manual.setEnabled(bool(self.manual_pending_segments))
+            self._reassign_manual_preview_colors()
+            self._rebuild_segment_list()
+            self._update_segments_label()
+            self._update_status()
+            self._update_status_bar()
+            print(f"[UI] Deleted pending manual segment {idx + 1}")
+            return
         segments = self._active_segments()
         if idx is None or idx < 0 or idx >= len(segments):
             return
@@ -1975,6 +2096,19 @@ class MainWindow(QMainWindow):
         idx = items[0].data(Qt.UserRole)
         if idx is None or idx <= 0:
             return
+        if self.radio_manual.isChecked() and self.manual_pending_segments:
+            self.manual_pending_segments[idx], self.manual_pending_segments[idx - 1] = (
+                self.manual_pending_segments[idx - 1], self.manual_pending_segments[idx]
+            )
+            if idx < len(self.manual_edges):
+                self.manual_edges[idx], self.manual_edges[idx - 1] = (
+                    self.manual_edges[idx - 1], self.manual_edges[idx]
+                )
+            self._reassign_manual_preview_colors()
+            self._rebuild_segment_list()
+            self._select_segment_in_list(idx - 1)
+            print(f"[UI] Moved pending manual segment up: {idx + 1} -> {idx}")
+            return
         segments = self._active_segments()
         segments[idx], segments[idx - 1] = (
             segments[idx - 1], segments[idx]
@@ -1989,6 +2123,22 @@ class MainWindow(QMainWindow):
         if not items:
             return
         idx = items[0].data(Qt.UserRole)
+        if self.radio_manual.isChecked() and self.manual_pending_segments:
+            segments = self.manual_pending_segments
+            if idx is None or idx >= len(segments) - 1:
+                return
+            segments[idx], segments[idx + 1] = (
+                segments[idx + 1], segments[idx]
+            )
+            if idx + 1 < len(self.manual_edges):
+                self.manual_edges[idx], self.manual_edges[idx + 1] = (
+                    self.manual_edges[idx + 1], self.manual_edges[idx]
+                )
+            self._reassign_manual_preview_colors()
+            self._rebuild_segment_list()
+            self._select_segment_in_list(idx + 1)
+            print(f"[UI] Moved pending manual segment down: {idx + 1} -> {idx + 2}")
+            return
         segments = self._active_segments()
         if idx is None or idx >= len(segments) - 1:
             return
@@ -2001,6 +2151,19 @@ class MainWindow(QMainWindow):
         print(f"[UI] Moved segment down: {idx + 1} → {idx + 2}")
 
     def undo_last_segment(self):
+        if self.radio_manual.isChecked() and self.manual_pending_segments:
+            seg = self.manual_pending_segments.pop()
+            self._remove_manual_preview_segment(seg)
+            if self.manual_edges:
+                self.manual_edges.pop()
+            self.btn_apply_manual.setEnabled(bool(self.manual_pending_segments))
+            self._reassign_manual_preview_colors()
+            self._rebuild_segment_list()
+            self._update_segments_label()
+            self._update_status()
+            self._update_status_bar()
+            print("[UI] Undo: removed last pending manual segment")
+            return
         segments = self._active_segments()
         if not segments:
             return
@@ -2057,60 +2220,49 @@ class MainWindow(QMainWindow):
     # ─── Manual apply ──────────────────────────────────────────────────
 
     def apply_manual(self):
-        if not self.manual_edges:
+        if not self.manual_pending_segments:
             return
         if self.active_weld_id is None:
             self._create_new_weld(name=None, context="manual")
-        edges_info = [(e, _edge_length(e)) for e in self.manual_edges]
+
+        segments_to_add = list(self.manual_pending_segments)
 
         ctx = self.viewer._display.GetContext()
         for ais in self.manual_ais_list:
             ctx.Remove(ais, False)
+        for seg in segments_to_add:
+            for ais in seg.get("preview_ais_list", []):
+                ctx.Remove(ais, False)
+            seg["preview_ais_list"] = []
         self.manual_ais_list.clear()
-
-        wires = self._build_wires(edges_info)
-        if not wires:
-            QMessageBox.warning(
-                self, "Path Error",
-                "Could not build a wire from the selected edges."
-            )
-            return
-
-        primary = wires[0]
-        start_pt, end_pt, is_closed = _wire_endpoints(primary["wire"])
-        total = sum(w["length"] for w in wires)
-        ptype = self._path_type_label(primary)
-
-        segments = self._active_segments()
-        seg_idx = len(segments)
-        color = self._segment_color(seg_idx)
-        segment_ais = []
-        for w in wires:
-            ais = AIS_Shape(w["wire"])
-            ais.SetColor(color)
-            ais.SetWidth(5.0)
-            ctx.Display(ais, False)
-            segment_ais.append(ais)
         self.viewer._display.Repaint()
 
-        segments.append({
-            "wires": wires, "ais_list": segment_ais,
-            "method": "Manual", "length": total, "type": ptype,
-            "start_point": start_pt, "end_point": end_pt, "is_closed": is_closed,
-        })
         active = self._active_weld()
         if active is not None:
             active["context"] = "manual"
+            for seg in segments_to_add:
+                self._display_segment_for_weld(active, seg)
+        self.viewer._display.Repaint()
+        total = sum(seg["length"] for seg in segments_to_add)
+
         self.manual_edges.clear()
+        self.manual_pending_segments.clear()
         self.btn_apply_manual.setEnabled(False)
-        self.lbl_path.setText(
-            f"Manual segment:\n  Type:   {ptype}\n  Length: {total:.2f} mm"
-        )
-        print(f"[RESULT] Manual path: {ptype}, {total:.2f} mm")
+        if len(segments_to_add) == 1:
+            seg = segments_to_add[0]
+            self.lbl_path.setText(
+                f"Manual segment:\n  Type:   {seg['type']}\n  Length: {seg['length']:.2f} mm"
+            )
+        else:
+            self.lbl_path.setText(
+                f"Manual segments added:\n  Count:  {len(segments_to_add)}\n  Total:  {total:.2f} mm"
+            )
+        print(f"[RESULT] Manual path: {len(segments_to_add)} segment(s), {total:.2f} mm")
         self._auto_order_active_weld()
         self._rebuild_segment_list()
         self._refresh_weld_list()
         self._update_segments_label()
+        self._update_status()
         self._update_status_bar()
 
     # ─── JSON IO ───────────────────────────────────────────────────────
@@ -2275,7 +2427,10 @@ class MainWindow(QMainWindow):
             self._update_face_labels()
             return
         if self.radio_manual.isChecked():
-            self.lbl_status.setText("Manual mode:\nClick edges on the model.")
+            self.lbl_status.setText(
+                "Manual mode:\n"
+                "Click edges to add segments to the active path."
+            )
             self._update_face_labels()
             return
 
@@ -2328,14 +2483,16 @@ class MainWindow(QMainWindow):
             self.lbl_face_b.setText("Face Y:  —")
 
     def _update_segments_label(self):
-        segments = self._active_segments()
+        manual_preview = self.radio_manual.isChecked() and bool(self.manual_pending_segments)
+        segments = self.manual_pending_segments if manual_preview else self._active_segments()
         n = len(segments)
         total = sum(s["length"] for s in segments)
-        self.lbl_segments.setText(f"Segments: {n}  |  Total: {total:.1f} mm")
+        label = "Selected segments" if manual_preview else "Segments"
+        self.lbl_segments.setText(f"{label}: {n}  |  Total: {total:.1f} mm")
         any_segments = any(w["segments"] for w in self.welds)
         self.btn_finish.setEnabled(any_segments)
-        self.btn_clear_segments.setEnabled(n > 0)
-        self.btn_undo.setEnabled(n > 0)
+        self.btn_clear_segments.setEnabled(bool(self._active_segments()))
+        self.btn_undo.setEnabled(n > 0 if manual_preview else bool(self._active_segments()))
 
     def _update_status_bar(self):
         if not self.solids:
