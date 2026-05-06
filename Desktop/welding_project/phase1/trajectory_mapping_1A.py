@@ -555,6 +555,44 @@ except Exception as exc:
     QT_AVAILABLE = False
 
 
+if OCC_AVAILABLE and QT_AVAILABLE:
+    class PanableTrajectoryViewer(qtViewer3d):
+        """qtViewer3d with explicit pan gestures for trajectory inspection."""
+
+        def __init__(self, parent=None):
+            super().__init__(parent)
+            self._pan_anchor = None
+
+        def mousePressEvent(self, event):
+            if (event.button() == Qt.MiddleButton or
+                    (event.button() == Qt.LeftButton and event.modifiers() & Qt.ShiftModifier)):
+                self._pan_anchor = event.pos()
+                event.accept()
+                return
+            super().mousePressEvent(event)
+
+        def mouseMoveEvent(self, event):
+            if self._pan_anchor is not None:
+                dx = event.pos().x() - self._pan_anchor.x()
+                dy = event.pos().y() - self._pan_anchor.y()
+                self._pan_anchor = event.pos()
+                try:
+                    self._display.Pan(dx, -dy)
+                    self._display.Repaint()
+                except Exception:
+                    pass
+                event.accept()
+                return
+            super().mouseMoveEvent(event)
+
+        def mouseReleaseEvent(self, event):
+            if self._pan_anchor is not None:
+                self._pan_anchor = None
+                event.accept()
+                return
+            super().mouseReleaseEvent(event)
+
+
 class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
     """Standalone GUI wrapper around the pure trajectory computation layer."""
 
@@ -568,7 +606,7 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
         self.setWindowTitle("Trajectory Mapping 1.A")
         self.resize(1380, 820)
 
-        self.viewer = qtViewer3d(self)
+        self.viewer = PanableTrajectoryViewer(self)
         self.welds = []
         self.trajectories = []
         self.step_file_path = None
@@ -618,6 +656,33 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
         export_action.triggered.connect(self.export_phase4_dialog)
         file_menu.addAction(export_action)
 
+        view_menu = self.menuBar().addMenu("View")
+
+        fit_action = QAction("Fit All", self)
+        fit_action.setShortcut(QKeySequence("F"))
+        fit_action.triggered.connect(self.fit_all)
+        view_menu.addAction(fit_action)
+
+        pan_left_action = QAction("Pan Left", self)
+        pan_left_action.setShortcut(QKeySequence(Qt.Key_Left))
+        pan_left_action.triggered.connect(lambda: self.pan_view(-80, 0))
+        view_menu.addAction(pan_left_action)
+
+        pan_right_action = QAction("Pan Right", self)
+        pan_right_action.setShortcut(QKeySequence(Qt.Key_Right))
+        pan_right_action.triggered.connect(lambda: self.pan_view(80, 0))
+        view_menu.addAction(pan_right_action)
+
+        pan_up_action = QAction("Pan Up", self)
+        pan_up_action.setShortcut(QKeySequence(Qt.Key_Up))
+        pan_up_action.triggered.connect(lambda: self.pan_view(0, 80))
+        view_menu.addAction(pan_up_action)
+
+        pan_down_action = QAction("Pan Down", self)
+        pan_down_action.setShortcut(QKeySequence(Qt.Key_Down))
+        pan_down_action.triggered.connect(lambda: self.pan_view(0, -80))
+        view_menu.addAction(pan_down_action)
+
     def _create_layout(self):
         panel = QWidget()
         panel_layout = QVBoxLayout(panel)
@@ -634,6 +699,37 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
         panel_layout.addWidget(self.chk_tangents)
         panel_layout.addWidget(self.chk_normals)
         panel_layout.addWidget(self.chk_labels)
+
+        panel_layout.addWidget(QLabel("Navigate:"))
+        nav_top = QHBoxLayout()
+        nav_mid = QHBoxLayout()
+        nav_bottom = QHBoxLayout()
+
+        btn_up = QPushButton("Up")
+        btn_up.clicked.connect(lambda: self.pan_view(0, 80))
+        nav_top.addStretch()
+        nav_top.addWidget(btn_up)
+        nav_top.addStretch()
+
+        btn_left = QPushButton("Left")
+        btn_fit = QPushButton("Fit")
+        btn_right = QPushButton("Right")
+        btn_left.clicked.connect(lambda: self.pan_view(-80, 0))
+        btn_fit.clicked.connect(self.fit_all)
+        btn_right.clicked.connect(lambda: self.pan_view(80, 0))
+        nav_mid.addWidget(btn_left)
+        nav_mid.addWidget(btn_fit)
+        nav_mid.addWidget(btn_right)
+
+        btn_down = QPushButton("Down")
+        btn_down.clicked.connect(lambda: self.pan_view(0, -80))
+        nav_bottom.addStretch()
+        nav_bottom.addWidget(btn_down)
+        nav_bottom.addStretch()
+
+        panel_layout.addLayout(nav_top)
+        panel_layout.addLayout(nav_mid)
+        panel_layout.addLayout(nav_bottom)
 
         panel_layout.addWidget(QLabel("Welds"))
         panel_layout.addWidget(self.weld_list, stretch=2)
@@ -762,6 +858,20 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
             except Exception:
                 pass
 
+    def pan_view(self, dx, dy):
+        try:
+            self.viewer._display.Pan(dx, dy)
+            self.viewer._display.Repaint()
+        except Exception as exc:
+            self.statusBar().showMessage(f"Pan failed: {exc}")
+
+    def fit_all(self):
+        try:
+            self.viewer._display.FitAll()
+            self.viewer._display.Repaint()
+        except Exception as exc:
+            self.statusBar().showMessage(f"Fit failed: {exc}")
+
     def refresh_viewer(self):
         if not QT_AVAILABLE or not OCC_AVAILABLE:
             return
@@ -799,8 +909,7 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
                     self._display_shape(BRepBuilderAPI_MakeEdge(base, end).Edge(), color=normal_color)
 
         try:
-            self.viewer._display.FitAll()
-            self.viewer._display.Repaint()
+            self.fit_all()
         except Exception:
             pass
 
