@@ -5,7 +5,6 @@ import sys
 from dataclasses import asdict, dataclass, field
 from typing import Optional
 
-
 @dataclass
 class WeldPoint:
     """Single point on a weld trajectory, ordered by distance from the weld start."""
@@ -23,7 +22,6 @@ class WeldPoint:
             "tangent": list(self.tangent),
             "normal": list(self.normal),
         }
-
 
 @dataclass
 class WeldTrajectory:
@@ -46,7 +44,6 @@ class WeldTrajectory:
             "discretization_step_mm": self.discretization_step_mm,
             "notes": self.notes,
         }
-
 
 # OCC imports are kept optional at module import time so JSON-only CLI operations
 # can still run in environments where pythonocc is not available.
@@ -76,11 +73,9 @@ except Exception as exc:
     OCC_IMPORT_ERROR = exc
     OCC_AVAILABLE = False
 
-
 def _require_occ():
     if not OCC_AVAILABLE:
         raise RuntimeError(f"pythonocc/OCC is required for trajectory computation: {OCC_IMPORT_ERROR}")
-
 
 def _normalize(vec, eps=1e-9):
     mag = (vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]) ** 0.5
@@ -88,21 +83,17 @@ def _normalize(vec, eps=1e-9):
         return (0.0, 0.0, 0.0), False
     return (vec[0] / mag, vec[1] / mag, vec[2] / mag), True
 
-
 def _shape_length(shape):
     _require_occ()
     props = GProp_GProps()
     brepgprop.LinearProperties(shape, props)
     return props.Mass()
 
-
 def _point_tuple(pnt):
     return (pnt.X(), pnt.Y(), pnt.Z())
 
-
 def _point_distance(a, b):
     return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2) ** 0.5
-
 
 def _edge_endpoints(edge):
     try:
@@ -116,7 +107,6 @@ def _edge_endpoints(edge):
     except Exception:
         return None
 
-
 def _read_step_shape(step_file_path):
     _require_occ()
     reader = STEPControl_Reader()
@@ -125,7 +115,6 @@ def _read_step_shape(step_file_path):
         raise RuntimeError(f"Could not read STEP file: {step_file_path}")
     reader.TransferRoots()
     return reader.OneShape()
-
 
 def _resolve_step_path(step_file_path, json_path=None):
     if not step_file_path:
@@ -137,7 +126,6 @@ def _resolve_step_path(step_file_path, json_path=None):
         if candidate and os.path.exists(candidate):
             return os.path.abspath(candidate)
     return step_file_path
-
 
 def _find_matching_edge(edges, start_xyz, end_xyz, tolerance=0.25):
     best = None
@@ -161,7 +149,6 @@ def _find_matching_edge(edges, start_xyz, end_xyz, tolerance=0.25):
         return None, False, best_score
     return best, best_reversed, best_score
 
-
 def _make_wire_from_edge(edge, reversed_edge=False):
     if reversed_edge:
         reversed_shape = edge.Reversed()
@@ -171,7 +158,6 @@ def _make_wire_from_edge(edge, reversed_edge=False):
         except Exception:
             edge = reversed_shape
     return BRepBuilderAPI_MakeWire(edge).Wire()
-
 
 def reconstruct_welds_from_metadata_json(payload, json_path=None, endpoint_tolerance=0.25):
     """
@@ -232,7 +218,6 @@ def reconstruct_welds_from_metadata_json(payload, json_path=None, endpoint_toler
 
     return reconstructed, step_path, notes
 
-
 def wire_to_compcurve(wire):
     """
     TopoDS_Wire -> BRepAdaptor_CompCurve.
@@ -242,7 +227,6 @@ def wire_to_compcurve(wire):
     _require_occ()
     cc = BRepAdaptor_CompCurve(wire)
     return cc, cc.FirstParameter(), cc.LastParameter()
-
 
 def discretize_uniform(compcurve, u_min, u_max, step_mm):
     """
@@ -274,7 +258,6 @@ def discretize_uniform(compcurve, u_min, u_max, step_mm):
         samples.append((u_max, total_len))
     return samples
 
-
 def point_and_tangent(compcurve, u):
     """
     Evaluate point and unit tangent at parameter u.
@@ -290,7 +273,6 @@ def point_and_tangent(compcurve, u):
     if not ok:
         return pos, (0.0, 0.0, 0.0), True
     return pos, t, False
-
 
 def point_on_face_normal(face, point_xyz, default=(0.0, 0.0, 1.0)):
     """
@@ -319,7 +301,6 @@ def point_on_face_normal(face, point_xyz, default=(0.0, 0.0, 1.0)):
     except Exception:
         return default, False
 
-
 def bisector_normal(face_a, face_b, point_xyz):
     """
     Bisector of two face normals at a point.
@@ -345,7 +326,6 @@ def bisector_normal(face_a, face_b, point_xyz):
         return n_b, True, "face_b_only"
     return (0.0, 0.0, 1.0), False, "default_z"
 
-
 def _repair_singular_tangents(points, notes):
     for i, point in enumerate(points):
         if point.tangent != (0.0, 0.0, 0.0):
@@ -367,7 +347,6 @@ def _repair_singular_tangents(points, notes):
             if ok:
                 point.tangent = tangent
                 notes.append(f"Point {point.index}: tangent singularity, used neighbor average")
-
 
 def compute_segment_trajectory(segment_dict, step_mm, point_offset=0):
     """
@@ -417,7 +396,6 @@ def compute_segment_trajectory(segment_dict, step_mm, point_offset=0):
 
     _repair_singular_tangents(points, notes)
     return points, notes
-
 
 def compute_weld_trajectory(weld_dict, step_mm=1.0):
     """
@@ -469,10 +447,8 @@ def compute_weld_trajectory(weld_dict, step_mm=1.0):
         notes=all_notes,
     )
 
-
 def compute_trajectories(welds, step_mm=1.0):
     return [compute_weld_trajectory(weld, step_mm=step_mm) for weld in welds]
-
 
 def save_trajectory_json(trajectories, filepath):
     payload = {
@@ -482,7 +458,6 @@ def save_trajectory_json(trajectories, filepath):
     }
     with open(filepath, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
-
 
 def load_trajectory_json(filepath):
     with open(filepath, "r", encoding="utf-8") as f:
@@ -509,11 +484,9 @@ def load_trajectory_json(filepath):
         ))
     return out
 
-
 def _load_json_payload(filepath):
     with open(filepath, "r", encoding="utf-8") as f:
         return json.load(f)
-
 
 def _trajectory_color(index):
     palette = [
@@ -526,7 +499,6 @@ def _trajectory_color(index):
     ]
     rgb = palette[index % len(palette)]
     return Quantity_Color(rgb[0], rgb[1], rgb[2], Quantity_TOC_RGB)
-
 
 try:
     from PyQt5.QtCore import Qt
@@ -553,7 +525,6 @@ try:
 except Exception as exc:
     QT_IMPORT_ERROR = exc
     QT_AVAILABLE = False
-
 
 if OCC_AVAILABLE and QT_AVAILABLE:
     class PanableTrajectoryViewer(qtViewer3d):
@@ -592,7 +563,6 @@ if OCC_AVAILABLE and QT_AVAILABLE:
                 return
             super().mouseReleaseEvent(event)
 
-
 class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
     """Standalone GUI wrapper around the pure trajectory computation layer."""
 
@@ -602,16 +572,18 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
         if not OCC_AVAILABLE:
             raise RuntimeError(f"pythonocc/OCC is required for GUI mode: {OCC_IMPORT_ERROR}")
 
-        super().__init__(parent)
+        super().__init__(None)
         self.setWindowTitle("Trajectory Mapping 1.A")
         self.resize(1380, 820)
 
+        self.path_selection_window = parent
         self.viewer = PanableTrajectoryViewer(self)
         self.welds = []
         self.trajectories = []
         self.step_file_path = None
         self.loaded_json_path = None
         self._displayed = []
+        self.planner_windows = []
 
         self.step_spin = QDoubleSpinBox()
         self.step_spin.setRange(0.01, 1000.0)
@@ -639,22 +611,28 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
     def _create_menu(self):
         file_menu = self.menuBar().addMenu("File")
 
-        open_action = QAction("Open Path Extraction Output...", self)
-        open_action.setShortcut(QKeySequence("Ctrl+O"))
-        open_action.triggered.connect(self.open_path_output)
-        file_menu.addAction(open_action)
-
-        file_menu.addSeparator()
-
         save_action = QAction("Save Trajectory JSON", self)
         save_action.setShortcut(QKeySequence("Ctrl+S"))
         save_action.triggered.connect(self.save_trajectory_dialog)
         file_menu.addAction(save_action)
 
-        export_action = QAction("Export for Phase 4", self)
-        export_action.setShortcut(QKeySequence("Ctrl+E"))
-        export_action.triggered.connect(self.export_phase4_dialog)
-        file_menu.addAction(export_action)
+        planner_action = QAction("Proceed to Trajectory Planner...", self)
+        planner_action.setShortcut(QKeySequence("Ctrl+P"))
+        planner_action.triggered.connect(self.proceed_to_trajectory_planner)
+        file_menu.addAction(planner_action)
+
+        workspace_menu = self.menuBar().addMenu("Workspace")
+
+        back_action = QAction("Back to Path Selection", self)
+        back_action.setShortcut(QKeySequence("Ctrl+B"))
+        back_action.triggered.connect(self.back_to_path_selection)
+        back_action.setEnabled(self.path_selection_window is not None)
+        workspace_menu.addAction(back_action)
+
+        show_this_action = QAction("Show Trajectory Mapping", self)
+        show_this_action.setShortcut(QKeySequence("Ctrl+T"))
+        show_this_action.triggered.connect(self.bring_to_front)
+        workspace_menu.addAction(show_this_action)
 
         view_menu = self.menuBar().addMenu("View")
 
@@ -686,6 +664,12 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
     def _create_layout(self):
         panel = QWidget()
         panel_layout = QVBoxLayout(panel)
+        panel_layout.addWidget(QLabel("Workspace"))
+        back_btn = QPushButton("Back to Path Selection")
+        back_btn.clicked.connect(self.back_to_path_selection)
+        back_btn.setEnabled(self.path_selection_window is not None)
+        panel_layout.addWidget(back_btn)
+
         panel_layout.addWidget(QLabel("Trajectory Settings"))
         panel_layout.addWidget(QLabel("Discretization step:"))
         panel_layout.addWidget(self.step_spin)
@@ -738,16 +722,29 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
 
         save_btn = QPushButton("Save Trajectory JSON")
         save_btn.clicked.connect(self.save_trajectory_dialog)
-        export_btn = QPushButton("Export for Phase 4")
-        export_btn.clicked.connect(self.export_phase4_dialog)
+        planner_btn = QPushButton("Proceed to Trajectory Planner")
+        planner_btn.setToolTip("Open Faz 4 planner using the displayed WeldPoint trajectories")
+        planner_btn.clicked.connect(self.proceed_to_trajectory_planner)
         panel_layout.addWidget(save_btn)
-        panel_layout.addWidget(export_btn)
+        panel_layout.addWidget(planner_btn)
 
         container = QWidget()
         layout = QHBoxLayout(container)
         layout.addWidget(self.viewer, stretch=5)
         layout.addWidget(panel, stretch=2)
         self.setCentralWidget(container)
+
+    def bring_to_front(self):
+        self.showNormal()
+        self.raise_()
+        self.activateWindow()
+
+    def back_to_path_selection(self):
+        if self.path_selection_window is None:
+            return
+        self.path_selection_window.showNormal()
+        self.path_selection_window.raise_()
+        self.path_selection_window.activateWindow()
 
     def _connect_signals(self):
         self.chk_points.stateChanged.connect(self.refresh_viewer)
@@ -923,23 +920,32 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
         if path:
             self._save_to_path(path)
 
-    def export_phase4_dialog(self):
+    def proceed_to_trajectory_planner(self):
         if not self.trajectories:
-            QMessageBox.information(self, "No Trajectory", "No trajectories to export.")
+            QMessageBox.information(self, "No Trajectory", "No trajectories to plan.")
             return
-        default = "trajectory_phase4.json"
-        if self.step_file_path:
-            base = os.path.splitext(os.path.basename(self.step_file_path))[0]
-            default = f"{base}_phase4.json"
-        path, _ = QFileDialog.getSaveFileName(
-            self, "Export for Phase 4", default, "JSON files (*.json)"
-        )
-        if path:
-            if not path.lower().endswith(".json"):
-                path += ".json"
-            if not path.lower().endswith("_phase4.json"):
-                path = path[:-5] + "_phase4.json"
-            self._save_to_path(path)
+        try:
+            import trajectory_planner_1A
+            window = self.planner_windows[-1] if self.planner_windows else None
+            if window is not None:
+                try:
+                    window.load_trajectories(self.trajectories)
+                    window.showNormal()
+                    window.raise_()
+                    window.activateWindow()
+                except RuntimeError:
+                    window = None
+            if window is None:
+                window = trajectory_planner_1A.launch_with_trajectories(
+                    self.trajectories,
+                    parent=self,
+                )
+                self.planner_windows.append(window)
+            self.statusBar().showMessage(
+                f"Trajectory planner opened for {len(self.trajectories)} weld trajectory object(s)."
+            )
+        except Exception as exc:
+            QMessageBox.critical(self, "Trajectory Planner Failed", str(exc))
 
     def _save_to_path(self, path):
         if not path.lower().endswith(".json"):
@@ -960,7 +966,6 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
             f"Step: {self.step_spin.value():.3f} mm"
         )
 
-
 def launch_with_welds(welds, step_file_path=None, parent=None, step_mm=1.0):
     """
     In-process entry point for main_updated_5.K.py.
@@ -976,7 +981,6 @@ def launch_with_welds(welds, step_file_path=None, parent=None, step_mm=1.0):
     window.load_welds(welds, step_file_path=step_file_path, step_mm=step_mm)
     window.show()
     return window
-
 
 def _run_cli(args):
     payload = _load_json_payload(args.input)
@@ -1003,7 +1007,6 @@ def _run_cli(args):
 
     raise RuntimeError("Unsupported input JSON: expected 'trajectories' or 'welds'.")
 
-
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Trajectory Mapping 1.A")
     parser.add_argument("--input", help="Input JSON path")
@@ -1023,7 +1026,6 @@ def main(argv=None):
     if not args.output:
         raise RuntimeError("--output is required in CLI JSON mode")
     return _run_cli(args)
-
 
 if __name__ == "__main__":
     try:

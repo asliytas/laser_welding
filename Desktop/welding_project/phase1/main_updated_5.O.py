@@ -280,7 +280,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Robotic Laser Welding – Phase 3 (Paths & Segments) - 5.N")
+        self.setWindowTitle("Robotic Laser Welding - Phase 3/4 (Paths, Mapping & Planning) - 5.O")
         self.resize(1380, 820)
 
         self.viewer = WeldingViewer(self)
@@ -305,6 +305,7 @@ class MainWindow(QMainWindow):
         self.welds = []
         self.active_weld_id = None
         self.trajectory_windows = []
+        self.planner_windows = []
 
         self._create_menu()
         self._install_shortcuts()
@@ -318,23 +319,6 @@ class MainWindow(QMainWindow):
         open_action.setShortcut(QKeySequence("Ctrl+O"))
         open_action.triggered.connect(self.open_step_file)
         file_menu.addAction(open_action)
-
-        file_menu.addSeparator()
-
-        load_action = QAction("Load Path From JSON...", self)
-        load_action.setShortcut(QKeySequence("Ctrl+L"))
-        load_action.triggered.connect(self.load_path_json)
-        file_menu.addAction(load_action)
-
-        export_action = QAction("Export Path for Trajectory Planning...", self)
-        export_action.setShortcut(QKeySequence("Ctrl+E"))
-        export_action.triggered.connect(self.export_path_for_trajectory)
-        file_menu.addAction(export_action)
-
-        trajectory_action = QAction("Proceed to Trajectory Mapping...", self)
-        trajectory_action.setShortcut(QKeySequence("Ctrl+T"))
-        trajectory_action.triggered.connect(self.proceed_to_trajectory_mapping)
-        file_menu.addAction(trajectory_action)
 
         view_menu = mb.addMenu("View")
 
@@ -370,6 +354,8 @@ class MainWindow(QMainWindow):
         QShortcut(QKeySequence(Qt.Key_Escape), self, activated=self.reset_face_selection)
         QShortcut(QKeySequence(Qt.Key_Delete), self, activated=self._sc_delete)
         QShortcut(QKeySequence("Ctrl+Z"),      self, activated=self.undo_last_segment)
+        QShortcut(QKeySequence("Ctrl+T"),      self, activated=self.proceed_to_trajectory_mapping)
+        QShortcut(QKeySequence("Ctrl+P"),      self, activated=self.proceed_to_trajectory_planner)
 
     def _sc_add_segment(self):
         if (self.radio_auto.isChecked()
@@ -604,16 +590,24 @@ class MainWindow(QMainWindow):
         self.btn_undo.setEnabled(False)
         v.addWidget(self.btn_undo)
 
-        self.btn_finish = QPushButton("Finalize All Segments")
-        self.btn_finish.clicked.connect(self.finish_path)
-        self.btn_finish.setEnabled(False)
-        v.addWidget(self.btn_finish)
-
+        workflow_box = QGroupBox("Workflow")
+        workflow_layout = QVBoxLayout()
         self.btn_trajectory = QPushButton("Proceed to Trajectory Mapping")
         self.btn_trajectory.setToolTip("Generate WeldPoint list with tangent and normal vectors (Ctrl+T)")
         self.btn_trajectory.clicked.connect(self.proceed_to_trajectory_mapping)
         self.btn_trajectory.setEnabled(False)
-        v.addWidget(self.btn_trajectory)
+        workflow_layout.addWidget(self.btn_trajectory)
+
+        self.btn_planner = QPushButton("Quick Plan (Skip Mapping)")
+        self.btn_planner.setToolTip(
+            "Skip the trajectory mapping window: generate WeldPoints internally, "
+            "then open the trajectory planner (Ctrl+P)"
+        )
+        self.btn_planner.clicked.connect(self.proceed_to_trajectory_planner)
+        self.btn_planner.setEnabled(False)
+        workflow_layout.addWidget(self.btn_planner)
+        workflow_box.setLayout(workflow_layout)
+        v.addWidget(workflow_box)
 
         self.btn_clear_segments = QPushButton("Clear All Segments")
         self.btn_clear_segments.clicked.connect(self.clear_all_segments)
@@ -709,8 +703,9 @@ class MainWindow(QMainWindow):
     def _on_mode_toggled(self, auto_checked):
         if auto_checked:
             self._activate_selection_mode(SEL_MODE_FACE)
-            for w in (self.btn_add_segment, self.btn_finish, self.btn_undo,
-                      self.btn_trajectory, self.btn_clear_segments, self.btn_reset_faces,
+            for w in (self.btn_add_segment, self.btn_undo,
+                      self.btn_trajectory, self.btn_planner,
+                      self.btn_clear_segments, self.btn_reset_faces,
                       self.btn_delete_segment, self.btn_move_up,
                       self.btn_move_down, self.lbl_face_a, self.lbl_face_b,
                       self.lbl_proximity, self.lbl_segments, self.lbl_legend,
@@ -724,8 +719,9 @@ class MainWindow(QMainWindow):
             self.lbl_proximity.setText("")
             self.lbl_face_a.setVisible(False)
             self.lbl_face_b.setVisible(False)
-            for w in (self.btn_finish, self.btn_undo, self.btn_clear_segments,
-                      self.btn_trajectory, self.btn_delete_segment, self.btn_move_up,
+            for w in (self.btn_undo, self.btn_clear_segments,
+                      self.btn_trajectory, self.btn_planner,
+                      self.btn_delete_segment, self.btn_move_up,
                       self.btn_move_down, self.lbl_segments, self.lbl_legend,
                       self.segment_list, self.weld_box):
                 w.setVisible(True)
@@ -2060,41 +2056,6 @@ class MainWindow(QMainWindow):
         self._update_status_bar()
         print("[UI] Undo: removed last segment")
 
-    def finish_path(self):
-        welds_with_segments = [w for w in self.welds if w["segments"]]
-        if not welds_with_segments:
-            return
-        old_active = self.active_weld_id
-        grand_total = 0.0
-        lines = ["Segments Finalized", "==================", ""]
-        for weld in welds_with_segments:
-            self.active_weld_id = weld["id"]
-            self._auto_order_active_weld()
-            segments = self._active_segments()
-            total = sum(s["length"] for s in segments)
-            grand_total += total
-            connected, gaps, _ = self._continuity_summary()
-            possible_joins = max(0, len(segments) - 1)
-            lines.append(f"Path {weld['id']} — {weld['name']}")
-            lines.append(f"  Total length: {total:.2f} mm")
-            lines.append(
-                f"  Continuity: {connected}/{possible_joins} joins connected, {gaps} gaps"
-            )
-            lines.append("  Segments:")
-            for i, seg in enumerate(segments):
-                method = self._method_human_label(seg.get("method", ""))
-                lines.append(f"    {i + 1}. {method:<24} {seg['length']:>7.2f} mm")
-            lines.append("")
-        self.active_weld_id = old_active
-        self._reassign_segment_colors()
-        self._rebuild_segment_list()
-        self._refresh_weld_list()
-        lines.append("──────────────────")
-        lines.append(f"Total: {len(welds_with_segments)} path(s), {grand_total:.2f} mm")
-        msg = "\n".join(lines)
-        print(f"\n=== FINISH PATH ===\n{msg}")
-        QMessageBox.information(self, "Segments Finalized", msg)
-
     def _trajectory_ready_welds(self):
         """Return live OCC geometry in the format expected by trajectory_mapping_1A."""
         ready_welds = []
@@ -2192,6 +2153,57 @@ class MainWindow(QMainWindow):
             print(f"[TRAJ] Launch failed: {e}")
             QMessageBox.critical(self, "Trajectory Mapping Failed", str(e))
 
+    def proceed_to_trajectory_planner(self):
+        total_segments = sum(len(w["segments"]) for w in self.welds)
+        if total_segments == 0:
+            QMessageBox.information(self, "No Path", "No segments to plan.")
+            return
+
+        ready_welds, skipped = self._trajectory_ready_welds()
+        if not ready_welds:
+            QMessageBox.warning(
+                self,
+                "No Wire Geometry",
+                "No wire-based segments were available for trajectory planning."
+            )
+            return
+
+        try:
+            import trajectory_mapping_1A
+            import trajectory_planner_1A
+
+            trajectories = trajectory_mapping_1A.compute_trajectories(
+                ready_welds,
+                step_mm=1.0,
+            )
+            window = self.planner_windows[-1] if self.planner_windows else None
+            if window is not None:
+                try:
+                    window.load_trajectories(trajectories)
+                    window.showNormal()
+                    window.raise_()
+                    window.activateWindow()
+                except RuntimeError:
+                    window = None
+            if window is None:
+                window = trajectory_planner_1A.launch_with_trajectories(
+                    trajectories,
+                    parent=self,
+                )
+                self.planner_windows.append(window)
+
+            msg = (
+                "Quick plan opened trajectory planner after generating WeldPoints "
+                f"internally for {len(trajectories)} weld trajectory object(s)."
+            )
+            if skipped:
+                msg += f" Skipped {skipped} non-wire segment(s), such as point contacts."
+            self.statusBar().showMessage(msg)
+            print(f"[PLAN] {msg}")
+        except Exception as e:
+            print(f"[PLAN] Launch failed: {e}")
+            QMessageBox.critical(self, "Trajectory Planner Failed", str(e))
+
     def _segments_to_json(self):
         def segment_to_json(i, seg):
             return {
@@ -2206,7 +2218,7 @@ class MainWindow(QMainWindow):
             }
 
         return {
-            "version": "5.N",
+            "version": "5.O",
             "step_file": self.current_step_file,
             "welds": [
                 {
@@ -2227,99 +2239,6 @@ class MainWindow(QMainWindow):
             ),
         }
 
-    def load_path_json(self):
-        path, _ = QFileDialog.getOpenFileName(
-            self, "Load Path From JSON", "", "JSON files (*.json)"
-        )
-        if not path:
-            return
-        try:
-            with open(path, "r", encoding="utf-8") as f:
-                data = json.load(f)
-        except Exception as e:
-            print(f"[IO] Load failed: {e}")
-            QMessageBox.critical(self, "Load Failed", str(e))
-            return
-        if "welds" in data:
-            welds = data.get("welds", [])
-        else:
-            welds = [{
-                "id": 1,
-                "name": "Path 1",
-                "context": "loaded",
-                "segments": data.get("segments", []),
-            }]
-        n = sum(len(w.get("segments", [])) for w in welds)
-        total = data.get(
-            "total_length",
-            sum(
-                s.get("length", 0.0)
-                for w in welds
-                for s in w.get("segments", [])
-            )
-        )
-        self.welds = []
-        for w in welds:
-            self.welds.append({
-                "id": int(w.get("id", len(self.welds) + 1)),
-                "name": w.get("name", f"Path {len(self.welds) + 1}"),
-                "segments": [
-                    dict(seg, ais_list=seg.get("ais_list", []))
-                    for seg in w.get("segments", [])
-                ],
-                "created_at": time.time(),
-                "context": w.get("context", "loaded"),
-            })
-        self.active_weld_id = self.welds[0]["id"] if self.welds else None
-        self._refresh_weld_list()
-        self._rebuild_segment_list()
-        self._update_segments_label()
-        self._update_status_bar()
-        msg = (
-            f"Loaded {n} segment(s) from:\n{path}\n\n"
-            f"STEP file: {data.get('step_file', '(unknown)')}\n"
-            f"Total length: {total:.2f} mm\n\n"
-            f"Loaded path metadata. Reopen the STEP file to recreate geometry."
-        )
-        print(f"[IO] Loaded metadata: {n} segment(s), total {total:.2f} mm")
-        QMessageBox.information(self, "Loaded", msg)
-
-    def export_path_for_trajectory(self):
-        total_segments = sum(len(w["segments"]) for w in self.welds)
-        if total_segments == 0:
-            QMessageBox.information(self, "No Path", "No segments to export.")
-            return
-        default = "trajectory_export.json"
-        if self.current_step_file:
-            base = self.current_step_file.rsplit("/", 1)[-1].rsplit("\\", 1)[-1]
-            base = base.rsplit(".", 1)[0]
-            default = f"{base}_trajectory.json"
-        path, _ = QFileDialog.getSaveFileName(
-            self, "Export Path for Trajectory Planning", default, "JSON files (*.json)"
-        )
-        if not path:
-            return
-        if not path.lower().endswith(".json"):
-            path += ".json"
-        try:
-            data = self._segments_to_json()
-            data["export_purpose"] = "trajectory_planning"
-            data["note"] = (
-                "Path extraction metadata. Use Proceed to Trajectory Mapping "
-                "for live WeldPoint generation with face normals."
-            )
-            with open(path, "w", encoding="utf-8") as f:
-                json.dump(data, f, indent=2, ensure_ascii=False)
-            print(f"[IO] Exported trajectory file: {path}")
-            QMessageBox.information(
-                self, "Exported",
-                f"Exported {len(self.welds)} path(s), {total_segments} segment(s) to:\n{path}\n\n"
-                f"Faz 4'teki trajectory planner'ın input'u olarak kullanılacak."
-            )
-        except Exception as e:
-            print(f"[IO] Export failed: {e}")
-            QMessageBox.critical(self, "Export Failed", str(e))
-
     def _update_status(self):
         if not self.solids:
             self.lbl_status.setText("Open a STEP file to begin.")
@@ -2338,7 +2257,7 @@ class MainWindow(QMainWindow):
             self.lbl_status.setText(
                 "Segment added.\n"
                 "Select next face pair to add another segment,\n"
-                "or click 'Finalize All Segments' to complete."
+                "or continue to Trajectory Mapping."
             )
         elif self.face_a is None and self.face_b is None:
             self.lbl_status.setText(
@@ -2387,8 +2306,8 @@ class MainWindow(QMainWindow):
         total = sum(s["length"] for s in segments)
         self.lbl_segments.setText(f"Segments: {len(segments)}  |  Total: {total:.1f} mm")
         any_segments = any(w["segments"] for w in self.welds)
-        self.btn_finish.setEnabled(any_segments)
         self.btn_trajectory.setEnabled(any_segments)
+        self.btn_planner.setEnabled(any_segments)
         self.btn_clear_segments.setEnabled(bool(segments))
         self.btn_undo.setEnabled(bool(segments))
 
