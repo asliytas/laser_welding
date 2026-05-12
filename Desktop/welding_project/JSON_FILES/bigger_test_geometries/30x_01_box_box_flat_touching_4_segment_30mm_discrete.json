@@ -1,0 +1,8413 @@
+{
+  "version": "weld_program_1.A",
+  "n_welds": 1,
+  "programs": [
+    {
+      "weld_id": 1,
+      "weld_name": "Path 1",
+      "motion": {
+        "target_speed_mm_s": 20.0,
+        "acceleration_max_mm_s2": 200.0,
+        "jerk_max_mm_s3": 2000.0,
+        "profile": "trapezoidal"
+      },
+      "tcp": {
+        "strategy": "bisector_normal",
+        "flip_torch_z": false,
+        "custom_world_z": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "approach": {
+        "distance_mm": 20.0,
+        "speed_mm_s": 50.0,
+        "direction": "normal_positive",
+        "custom_vector": null,
+        "n_points": 5
+      },
+      "retract": {
+        "distance_mm": 20.0,
+        "speed_mm_s": 50.0,
+        "direction": "normal_positive",
+        "custom_vector": null,
+        "n_points": 5
+      },
+      "process": {
+        "laser_power_w": 1500.0,
+        "wire_feed_rate": 5.0,
+        "shielding_gas_flow": 15.0,
+        "focus_offset_mm": 0.0,
+        "ramp_up_time_s": 0.2,
+        "ramp_down_time_s": 0.2
+      },
+      "setpoints": [
+        {
+          "index": 0,
+          "timestamp": -0.4,
+          "arc_length": -20.0,
+          "phase": "approach",
+          "pose": {
+            "position": [
+              1520.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 50.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 1,
+          "timestamp": -0.30000000000000004,
+          "arc_length": -15.0,
+          "phase": "approach",
+          "pose": {
+            "position": [
+              1515.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 50.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 2,
+          "timestamp": -0.2,
+          "arc_length": -10.0,
+          "phase": "approach",
+          "pose": {
+            "position": [
+              1510.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 50.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 3,
+          "timestamp": -0.1,
+          "arc_length": -5.0,
+          "phase": "approach",
+          "pose": {
+            "position": [
+              1505.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 50.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 4,
+          "timestamp": -0.0,
+          "arc_length": -0.0,
+          "phase": "approach",
+          "pose": {
+            "position": [
+              1500.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 50.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 5,
+          "timestamp": 0.0,
+          "arc_length": 0.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 0.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 6,
+          "timestamp": 1.55,
+          "arc_length": 30.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              30.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 7,
+          "timestamp": 3.0500000000000003,
+          "arc_length": 60.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              60.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 8,
+          "timestamp": 4.55,
+          "arc_length": 90.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              90.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 9,
+          "timestamp": 6.05,
+          "arc_length": 120.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              120.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 10,
+          "timestamp": 7.55,
+          "arc_length": 150.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              150.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 11,
+          "timestamp": 9.049999999999999,
+          "arc_length": 179.99999999999997,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              179.99999999999997,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 12,
+          "timestamp": 10.549999999999999,
+          "arc_length": 209.99999999999997,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              209.99999999999997,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 13,
+          "timestamp": 12.049999999999999,
+          "arc_length": 240.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              240.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 14,
+          "timestamp": 13.549999999999999,
+          "arc_length": 270.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              270.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 15,
+          "timestamp": 15.049999999999999,
+          "arc_length": 300.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              300.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 16,
+          "timestamp": 16.55,
+          "arc_length": 330.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              330.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 17,
+          "timestamp": 18.049999999999997,
+          "arc_length": 359.99999999999994,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              359.99999999999994,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 18,
+          "timestamp": 19.549999999999997,
+          "arc_length": 389.99999999999994,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              389.99999999999994,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 19,
+          "timestamp": 21.049999999999997,
+          "arc_length": 419.99999999999994,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              419.99999999999994,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 20,
+          "timestamp": 22.549999999999997,
+          "arc_length": 449.99999999999994,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              449.99999999999994,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 21,
+          "timestamp": 24.05,
+          "arc_length": 480.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              480.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 22,
+          "timestamp": 25.55,
+          "arc_length": 510.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              510.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 23,
+          "timestamp": 27.05,
+          "arc_length": 540.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              540.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 24,
+          "timestamp": 28.55,
+          "arc_length": 570.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              570.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 25,
+          "timestamp": 30.05,
+          "arc_length": 600.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              600.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 26,
+          "timestamp": 31.55,
+          "arc_length": 630.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              630.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 27,
+          "timestamp": 33.050000000000004,
+          "arc_length": 660.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              660.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 28,
+          "timestamp": 34.550000000000004,
+          "arc_length": 690.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              690.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 29,
+          "timestamp": 36.05,
+          "arc_length": 719.9999999999999,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              719.9999999999999,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 30,
+          "timestamp": 37.55,
+          "arc_length": 749.9999999999999,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              749.9999999999999,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 31,
+          "timestamp": 39.05,
+          "arc_length": 779.9999999999999,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              779.9999999999999,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 32,
+          "timestamp": 40.55,
+          "arc_length": 809.9999999999999,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              809.9999999999999,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 33,
+          "timestamp": 42.05,
+          "arc_length": 839.9999999999999,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              839.9999999999999,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 34,
+          "timestamp": 43.55,
+          "arc_length": 869.9999999999999,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              869.9999999999999,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 35,
+          "timestamp": 45.050000000000004,
+          "arc_length": 900.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                -0.0,
+                -1.0
+              ],
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.5,
+              -0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 36,
+          "timestamp": 45.050000000000004,
+          "arc_length": 900.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 37,
+          "timestamp": 46.550000000000004,
+          "arc_length": 930.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1470.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 38,
+          "timestamp": 48.050000000000004,
+          "arc_length": 960.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1440.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 39,
+          "timestamp": 49.550000000000004,
+          "arc_length": 990.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1410.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 40,
+          "timestamp": 51.050000000000004,
+          "arc_length": 1020.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1380.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 41,
+          "timestamp": 52.550000000000004,
+          "arc_length": 1050.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1350.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 42,
+          "timestamp": 54.050000000000004,
+          "arc_length": 1080.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1320.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 43,
+          "timestamp": 55.550000000000004,
+          "arc_length": 1110.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1290.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 44,
+          "timestamp": 57.050000000000004,
+          "arc_length": 1140.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1260.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 45,
+          "timestamp": 58.550000000000004,
+          "arc_length": 1170.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1230.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 46,
+          "timestamp": 60.050000000000004,
+          "arc_length": 1200.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1200.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 47,
+          "timestamp": 61.550000000000004,
+          "arc_length": 1230.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1170.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 48,
+          "timestamp": 63.050000000000004,
+          "arc_length": 1260.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1140.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 49,
+          "timestamp": 64.55,
+          "arc_length": 1290.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1110.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 50,
+          "timestamp": 66.05,
+          "arc_length": 1320.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1080.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 51,
+          "timestamp": 67.55,
+          "arc_length": 1350.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1050.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 52,
+          "timestamp": 69.05,
+          "arc_length": 1380.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1020.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 53,
+          "timestamp": 70.55,
+          "arc_length": 1410.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              990.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 54,
+          "timestamp": 72.05,
+          "arc_length": 1440.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              959.9999999999999,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 55,
+          "timestamp": 73.55,
+          "arc_length": 1470.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              929.9999999999999,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 56,
+          "timestamp": 75.05,
+          "arc_length": 1500.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              899.9999999999999,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 57,
+          "timestamp": 76.55,
+          "arc_length": 1530.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              869.9999999999999,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 58,
+          "timestamp": 78.05,
+          "arc_length": 1560.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              839.9999999999999,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 59,
+          "timestamp": 79.55000000000001,
+          "arc_length": 1590.0000000000002,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              809.9999999999998,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 60,
+          "timestamp": 81.05000000000001,
+          "arc_length": 1620.0000000000002,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              779.9999999999998,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 61,
+          "timestamp": 82.55,
+          "arc_length": 1650.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              749.9999999999999,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 62,
+          "timestamp": 84.05000000000001,
+          "arc_length": 1680.0000000000002,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              719.9999999999998,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 63,
+          "timestamp": 85.55000000000001,
+          "arc_length": 1710.0000000000002,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              689.9999999999998,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 64,
+          "timestamp": 87.05000000000001,
+          "arc_length": 1740.0000000000002,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              659.9999999999998,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 65,
+          "timestamp": 88.55000000000001,
+          "arc_length": 1770.0000000000002,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              629.9999999999998,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 66,
+          "timestamp": 90.05000000000001,
+          "arc_length": 1800.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              599.9999999999997,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 67,
+          "timestamp": 91.55000000000001,
+          "arc_length": 1830.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              569.9999999999997,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 68,
+          "timestamp": 93.05000000000001,
+          "arc_length": 1860.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              539.9999999999997,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 69,
+          "timestamp": 94.55000000000001,
+          "arc_length": 1890.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              509.99999999999966,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 70,
+          "timestamp": 96.05000000000001,
+          "arc_length": 1920.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              479.99999999999955,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 71,
+          "timestamp": 97.55000000000001,
+          "arc_length": 1950.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              449.99999999999955,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 72,
+          "timestamp": 99.05000000000001,
+          "arc_length": 1980.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              419.99999999999955,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 73,
+          "timestamp": 100.55000000000001,
+          "arc_length": 2010.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              389.99999999999955,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 74,
+          "timestamp": 102.05000000000001,
+          "arc_length": 2040.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              359.99999999999955,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 75,
+          "timestamp": 103.55000000000001,
+          "arc_length": 2070.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              329.99999999999955,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 76,
+          "timestamp": 105.05000000000001,
+          "arc_length": 2100.0000000000005,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              299.99999999999955,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 77,
+          "timestamp": 106.55000000000004,
+          "arc_length": 2130.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              269.9999999999993,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 78,
+          "timestamp": 108.05000000000004,
+          "arc_length": 2160.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              239.99999999999932,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 79,
+          "timestamp": 109.55000000000004,
+          "arc_length": 2190.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              209.99999999999932,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 80,
+          "timestamp": 111.05000000000004,
+          "arc_length": 2220.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              179.99999999999932,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 81,
+          "timestamp": 112.55000000000004,
+          "arc_length": 2250.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              149.99999999999932,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 82,
+          "timestamp": 114.05000000000004,
+          "arc_length": 2280.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              119.99999999999932,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 83,
+          "timestamp": 115.55000000000004,
+          "arc_length": 2310.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              89.99999999999932,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 84,
+          "timestamp": 117.05000000000004,
+          "arc_length": 2340.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              59.99999999999932,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 85,
+          "timestamp": 118.55000000000004,
+          "arc_length": 2370.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              29.99999999999909,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 86,
+          "timestamp": 120.05,
+          "arc_length": 2400.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                -1.0,
+                0.0,
+                -0.0
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                -1.0,
+                -0.0
+              ]
+            ],
+            "quaternion": [
+              0.0,
+              0.0,
+              -0.7071067811865475,
+              0.7071067811865476
+            ],
+            "euler_zyx_deg": [
+              180.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 87,
+          "timestamp": 120.05,
+          "arc_length": 2400.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              900.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 88,
+          "timestamp": 121.55,
+          "arc_length": 2430.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              870.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 89,
+          "timestamp": 123.05,
+          "arc_length": 2460.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              840.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 90,
+          "timestamp": 124.55,
+          "arc_length": 2490.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              810.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 91,
+          "timestamp": 126.05,
+          "arc_length": 2520.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              780.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 92,
+          "timestamp": 127.55,
+          "arc_length": 2550.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              750.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 93,
+          "timestamp": 129.04999999999998,
+          "arc_length": 2580.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              720.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 94,
+          "timestamp": 130.54999999999998,
+          "arc_length": 2610.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              690.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 95,
+          "timestamp": 132.04999999999998,
+          "arc_length": 2640.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              660.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 96,
+          "timestamp": 133.54999999999998,
+          "arc_length": 2670.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              630.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 97,
+          "timestamp": 135.04999999999998,
+          "arc_length": 2700.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              600.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 98,
+          "timestamp": 136.54999999999998,
+          "arc_length": 2730.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              570.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 99,
+          "timestamp": 138.04999999999998,
+          "arc_length": 2760.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              540.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 100,
+          "timestamp": 139.54999999999998,
+          "arc_length": 2790.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              510.00000000000006,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 101,
+          "timestamp": 141.04999999999998,
+          "arc_length": 2820.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              480.00000000000006,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 102,
+          "timestamp": 142.54999999999998,
+          "arc_length": 2850.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              450.00000000000006,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 103,
+          "timestamp": 144.04999999999998,
+          "arc_length": 2880.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              420.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 104,
+          "timestamp": 145.54999999999998,
+          "arc_length": 2910.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              390.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 105,
+          "timestamp": 147.04999999999998,
+          "arc_length": 2940.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              360.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 106,
+          "timestamp": 148.54999999999998,
+          "arc_length": 2970.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              330.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 107,
+          "timestamp": 150.04999999999998,
+          "arc_length": 3000.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              300.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 108,
+          "timestamp": 151.54999999999998,
+          "arc_length": 3030.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              270.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 109,
+          "timestamp": 153.04999999999998,
+          "arc_length": 3060.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              240.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 110,
+          "timestamp": 154.54999999999998,
+          "arc_length": 3090.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              210.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 111,
+          "timestamp": 156.04999999999998,
+          "arc_length": 3120.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              180.0000000000001,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 112,
+          "timestamp": 157.54999999999998,
+          "arc_length": 3150.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              150.0000000000001,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 113,
+          "timestamp": 159.04999999999998,
+          "arc_length": 3180.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              120.00000000000011,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 114,
+          "timestamp": 160.54999999999998,
+          "arc_length": 3210.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              90.00000000000011,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 115,
+          "timestamp": 162.04999999999998,
+          "arc_length": 3240.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              60.000000000000114,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 116,
+          "timestamp": 163.54999999999998,
+          "arc_length": 3270.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              30.000000000000114,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 117,
+          "timestamp": 165.04999999999998,
+          "arc_length": 3300.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              -0.5,
+              0.5,
+              -0.5,
+              0.5
+            ],
+            "euler_zyx_deg": [
+              -90.0,
+              -0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 118,
+          "timestamp": 165.04999999999998,
+          "arc_length": 3300.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              0.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 119,
+          "timestamp": 166.54999999999998,
+          "arc_length": 3330.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              30.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 120,
+          "timestamp": 168.04999999999998,
+          "arc_length": 3360.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              60.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 121,
+          "timestamp": 169.54999999999998,
+          "arc_length": 3390.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              90.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 122,
+          "timestamp": 171.04999999999998,
+          "arc_length": 3420.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              120.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 123,
+          "timestamp": 172.54999999999998,
+          "arc_length": 3450.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              150.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 124,
+          "timestamp": 174.04999999999998,
+          "arc_length": 3480.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              180.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 125,
+          "timestamp": 175.54999999999998,
+          "arc_length": 3510.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              210.00000000000003,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 126,
+          "timestamp": 177.04999999999998,
+          "arc_length": 3540.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              240.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 127,
+          "timestamp": 178.54999999999998,
+          "arc_length": 3570.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              270.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 128,
+          "timestamp": 180.04999999999998,
+          "arc_length": 3600.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              300.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 129,
+          "timestamp": 181.54999999999998,
+          "arc_length": 3630.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              329.99999999999994,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 130,
+          "timestamp": 183.04999999999998,
+          "arc_length": 3660.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              359.99999999999994,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 131,
+          "timestamp": 184.54999999999998,
+          "arc_length": 3690.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              389.99999999999994,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 132,
+          "timestamp": 186.04999999999998,
+          "arc_length": 3720.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              419.99999999999994,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 133,
+          "timestamp": 187.54999999999998,
+          "arc_length": 3750.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              450.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 134,
+          "timestamp": 189.04999999999998,
+          "arc_length": 3780.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              480.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 135,
+          "timestamp": 190.54999999999998,
+          "arc_length": 3810.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              510.00000000000006,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 136,
+          "timestamp": 192.04999999999998,
+          "arc_length": 3840.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              540.0000000000001,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 137,
+          "timestamp": 193.54999999999998,
+          "arc_length": 3870.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              570.0000000000001,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 138,
+          "timestamp": 195.04999999999998,
+          "arc_length": 3900.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              600.0000000000001,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 139,
+          "timestamp": 196.54999999999998,
+          "arc_length": 3930.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              630.0000000000001,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 140,
+          "timestamp": 198.04999999999998,
+          "arc_length": 3960.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              660.0000000000001,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 141,
+          "timestamp": 199.54999999999998,
+          "arc_length": 3990.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              690.0000000000002,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 142,
+          "timestamp": 201.04999999999998,
+          "arc_length": 4020.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              720.0000000000002,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 143,
+          "timestamp": 202.54999999999998,
+          "arc_length": 4050.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              750.0000000000001,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 144,
+          "timestamp": 204.04999999999998,
+          "arc_length": 4080.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              780.0000000000002,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 145,
+          "timestamp": 205.54999999999998,
+          "arc_length": 4110.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              810.0000000000002,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 146,
+          "timestamp": 207.04999999999998,
+          "arc_length": 4140.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              840.0000000000002,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 147,
+          "timestamp": 208.54999999999998,
+          "arc_length": 4170.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              870.0000000000002,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 148,
+          "timestamp": 210.04999999999998,
+          "arc_length": 4200.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              900.0000000000003,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 149,
+          "timestamp": 211.54999999999998,
+          "arc_length": 4230.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              930.0000000000003,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 150,
+          "timestamp": 213.04999999999998,
+          "arc_length": 4260.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              960.0000000000003,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 151,
+          "timestamp": 214.54999999999998,
+          "arc_length": 4290.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              990.0000000000003,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 152,
+          "timestamp": 216.04999999999998,
+          "arc_length": 4320.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1020.0000000000005,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 153,
+          "timestamp": 217.54999999999998,
+          "arc_length": 4350.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1050.0000000000005,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 154,
+          "timestamp": 219.04999999999998,
+          "arc_length": 4380.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1080.0000000000005,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 155,
+          "timestamp": 220.54999999999998,
+          "arc_length": 4410.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1110.0000000000005,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 156,
+          "timestamp": 222.04999999999998,
+          "arc_length": 4440.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1140.0000000000005,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 157,
+          "timestamp": 223.54999999999998,
+          "arc_length": 4470.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1170.0000000000005,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 158,
+          "timestamp": 225.04999999999998,
+          "arc_length": 4500.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1200.0000000000005,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 159,
+          "timestamp": 226.55000000000004,
+          "arc_length": 4530.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1230.0000000000007,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 160,
+          "timestamp": 228.05000000000004,
+          "arc_length": 4560.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1260.0000000000007,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 161,
+          "timestamp": 229.55000000000004,
+          "arc_length": 4590.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1290.0000000000007,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 162,
+          "timestamp": 231.05000000000004,
+          "arc_length": 4620.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1320.0000000000007,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 163,
+          "timestamp": 232.55000000000004,
+          "arc_length": 4650.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1350.0000000000007,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 164,
+          "timestamp": 234.05000000000004,
+          "arc_length": 4680.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1380.0000000000007,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 165,
+          "timestamp": 235.55000000000004,
+          "arc_length": 4710.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1410.0000000000007,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 166,
+          "timestamp": 237.05000000000004,
+          "arc_length": 4740.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1440.0000000000007,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 167,
+          "timestamp": 238.55000000000004,
+          "arc_length": 4770.000000000001,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1470.000000000001,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 20.0,
+          "acceleration": 0.0,
+          "laser_power": 1500.0,
+          "wire_feed_rate": 5.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 168,
+          "timestamp": 240.1,
+          "arc_length": 4800.0,
+          "phase": "weld",
+          "pose": {
+            "position": [
+              1500.0,
+              0.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 0.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 169,
+          "timestamp": 240.18,
+          "arc_length": 4804.0,
+          "phase": "retract",
+          "pose": {
+            "position": [
+              1500.0,
+              -4.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 50.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 170,
+          "timestamp": 240.26,
+          "arc_length": 4808.0,
+          "phase": "retract",
+          "pose": {
+            "position": [
+              1500.0,
+              -8.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 50.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 171,
+          "timestamp": 240.34,
+          "arc_length": 4812.0,
+          "phase": "retract",
+          "pose": {
+            "position": [
+              1500.0,
+              -12.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 50.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 172,
+          "timestamp": 240.42,
+          "arc_length": 4816.0,
+          "phase": "retract",
+          "pose": {
+            "position": [
+              1500.0,
+              -16.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 50.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        },
+        {
+          "index": 173,
+          "timestamp": 240.5,
+          "arc_length": 4820.0,
+          "phase": "retract",
+          "pose": {
+            "position": [
+              1500.0,
+              -20.0,
+              600.0
+            ],
+            "rotation_matrix": [
+              [
+                1.0,
+                -0.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ],
+              [
+                -0.0,
+                -1.0,
+                0.0
+              ]
+            ],
+            "quaternion": [
+              0.7071067811865476,
+              -0.7071067811865475,
+              0.0,
+              0.0
+            ],
+            "euler_zyx_deg": [
+              0.0,
+              0.0,
+              -90.0
+            ]
+          },
+          "velocity": 50.0,
+          "acceleration": 0.0,
+          "laser_power": 0.0,
+          "wire_feed_rate": 0.0,
+          "shielding_gas_flow": 15.0,
+          "focus_offset": 0.0,
+          "notes": []
+        }
+      ],
+      "total_duration_s": 240.5,
+      "weld_duration_s": 240.1,
+      "notes": [
+        "Setpoint 6: velocity discontinuity 20.0 mm/s",
+        "Setpoint 36: tangent jump 90.0 deg, sharp corner",
+        "Setpoint 36: orientation jump 90.0 deg",
+        "Setpoint 87: tangent jump 90.0 deg, sharp corner",
+        "Setpoint 87: orientation jump 90.0 deg",
+        "Setpoint 118: tangent jump 90.0 deg, sharp corner",
+        "Setpoint 118: orientation jump 90.0 deg",
+        "Setpoint 168: velocity discontinuity 20.0 mm/s"
+      ]
+    }
+  ]
+}
