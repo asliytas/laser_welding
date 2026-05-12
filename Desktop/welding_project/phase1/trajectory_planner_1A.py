@@ -850,8 +850,11 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
         save_btn.clicked.connect(self.save_program_dialog)
         export_btn = QPushButton("Export for Robot")
         export_btn.clicked.connect(self.export_robot_dialog)
+        load_robodk_btn = QPushButton("Load to RoboDK")
+        load_robodk_btn.clicked.connect(self.load_to_robodk_dialog)
         panel_layout.addWidget(save_btn)
         panel_layout.addWidget(export_btn)
+        panel_layout.addWidget(load_robodk_btn)
 
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
@@ -1062,6 +1065,44 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
             if not path.lower().endswith(".json"):
                 path += ".json"
             save_program_json(programs, path)
+
+    def load_to_robodk_dialog(self):
+        # Deferred import so the planner still runs without RoboDK installed.
+        try:
+            from robodk_bridge_1A import load_to_robodk, RoboDKBridgeError
+        except ImportError as exc:
+            QMessageBox.critical(
+                self, "Module Missing",
+                f"Cannot import robodk_bridge_1A: {exc}",
+            )
+            return
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Load Welding Program JSON into RoboDK",
+            "", "JSON files (*.json)",
+        )
+        if not path:
+            return
+        try:
+            progs = load_to_robodk(path)
+        except RoboDKBridgeError as exc:
+            QMessageBox.critical(self, "RoboDK Bridge Failed", str(exc))
+            return
+        except Exception as exc:
+            QMessageBox.critical(
+                self, "RoboDK Bridge Failed",
+                f"Unexpected error: {exc}",
+            )
+            return
+        names = []
+        for p in progs:
+            try:
+                names.append(p.Name())
+            except Exception:
+                names.append("<program>")
+        QMessageBox.information(
+            self, "Loaded to RoboDK",
+            "Created {} program(s):\n  - {}".format(len(progs), "\n  - ".join(names)),
+        )
 
     def _clear_viewer(self):
         try:
