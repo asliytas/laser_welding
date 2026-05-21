@@ -6,7 +6,7 @@ import sys
 from dataclasses import asdict, dataclass, field
 
 try:
-    from trajectory_mapping_1A import (
+    from trajectory_mapping_1R import (
         WeldPoint,
         WeldTrajectory,
         load_trajectory_json,
@@ -231,14 +231,6 @@ def _quat_angle_deg(q1, q2):
     return math.degrees(2.0 * math.acos(_clamp(dot, -1.0, 1.0)))
 
 
-def _torch_z_axis(rotation_matrix):
-    return (
-        rotation_matrix[0][2],
-        rotation_matrix[1][2],
-        rotation_matrix[2][2],
-    )
-
-
 def _radius_from_three_points(a, b, c):
     ab = _v_sub(b, a)
     bc = _v_sub(c, b)
@@ -270,12 +262,10 @@ def validate_program(program):
             program.notes.append(
                 f"Setpoint {b.index}: tangent jump {tangent_angle:.1f} deg, sharp corner"
             )
-        z_a = _torch_z_axis(a.pose.rotation_matrix)
-        z_b = _torch_z_axis(b.pose.rotation_matrix)
-        orientation_angle = _angle_between(z_a, z_b)
-        if orientation_angle > 30.0:
+        q_angle = _quat_angle_deg(a.pose.quaternion, b.pose.quaternion)
+        if q_angle > 30.0:
             program.notes.append(
-                f"Setpoint {b.index}: orientation jump {orientation_angle:.1f} deg"
+                f"Setpoint {b.index}: orientation jump {q_angle:.1f} deg"
             )
 
     for i in range(1, len(weld_points) - 1):
@@ -648,7 +638,7 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
 
     def open_trajectory_json(self):
         if load_trajectory_json is None:
-            QMessageBox.critical(self, "Import Failed", "trajectory_mapping_1A could not be imported.")
+            QMessageBox.critical(self, "Import Failed", "trajectory_mapping_1R could not be imported.")
             return
         path, _ = QFileDialog.getOpenFileName(self, "Open Trajectory JSON", "", "JSON files (*.json)")
         if path:
@@ -765,7 +755,7 @@ def launch_with_trajectories(trajectories, parent=None, tcp=None):
 
 def _run_cli(args):
     if load_trajectory_json is None:
-        raise RuntimeError("trajectory_mapping_1A could not be imported")
+        raise RuntimeError("trajectory_mapping_1R could not be imported")
     trajectories = load_trajectory_json(args.input)
     programs = plan_all_welds(trajectories)
     save_program_json(programs, args.output)
@@ -791,7 +781,7 @@ def main(argv=None):
         window = TrajectoryPlannerWindow()
         if input_path:
             if load_trajectory_json is None:
-                raise RuntimeError("trajectory_mapping_1A could not be imported")
+                raise RuntimeError("trajectory_mapping_1R could not be imported")
             window.load_trajectories(load_trajectory_json(input_path))
         window.show()
         return app.exec_()
