@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="28" y="38" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="700" fill="#111827">36 box box overlap 1mm</text>
+<polygon points="275.22,273.73 811.36,273.73 624.78,389.54 88.64,389.54" fill="#dbeafe" stroke="#2563eb" stroke-width="2.2" opacity="0.78" stroke-linejoin="round"/>
+<polygon points="275.22,488.19 811.36,488.19 811.36,273.73 275.22,273.73" fill="#ffffff" stroke="#2563eb" stroke-width="2.2" opacity="0.55" stroke-linejoin="round"/>
+<polygon points="811.36,488.19 624.78,604.00 624.78,389.54 811.36,273.73" fill="#ffffff" stroke="#2563eb" stroke-width="2.2" opacity="0.45" stroke-linejoin="round"/>
+<line x1="275.22" y1="488.19" x2="811.36" y2="488.19" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="811.36" y1="488.19" x2="624.78" y2="604.00" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="624.78" y1="604.00" x2="88.64" y2="604.00" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="88.64" y1="604.00" x2="275.22" y2="488.19" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="275.22" y1="273.73" x2="811.36" y2="273.73" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="811.36" y1="273.73" x2="624.78" y2="389.54" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="624.78" y1="389.54" x2="88.64" y2="389.54" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="88.64" y1="389.54" x2="275.22" y2="273.73" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="275.22" y1="488.19" x2="275.22" y2="273.73" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="811.36" y1="488.19" x2="811.36" y2="273.73" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="624.78" y1="604.00" x2="624.78" y2="389.54" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="88.64" y1="604.00" x2="88.64" y2="389.54" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<polygon points="275.22,70.00 811.36,70.00 624.78,185.81 88.64,185.81" fill="#fee2e2" stroke="#dc2626" stroke-width="2.2" opacity="0.78" stroke-linejoin="round"/>
+<polygon points="275.22,284.46 811.36,284.46 811.36,70.00 275.22,70.00" fill="#ffffff" stroke="#dc2626" stroke-width="2.2" opacity="0.55" stroke-linejoin="round"/>
+<polygon points="811.36,284.46 624.78,400.27 624.78,185.81 811.36,70.00" fill="#ffffff" stroke="#dc2626" stroke-width="2.2" opacity="0.45" stroke-linejoin="round"/>
+<line x1="275.22" y1="284.46" x2="811.36" y2="284.46" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="811.36" y1="284.46" x2="624.78" y2="400.27" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="624.78" y1="400.27" x2="88.64" y2="400.27" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="88.64" y1="400.27" x2="275.22" y2="284.46" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="275.22" y1="70.00" x2="811.36" y2="70.00" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="811.36" y1="70.00" x2="624.78" y2="185.81" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="624.78" y1="185.81" x2="88.64" y2="185.81" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="88.64" y1="185.81" x2="275.22" y2="70.00" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="275.22" y1="284.46" x2="275.22" y2="70.00" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="811.36" y1="284.46" x2="811.36" y2="70.00" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="624.78" y1="400.27" x2="624.78" y2="185.81" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="88.64" y1="400.27" x2="88.64" y2="185.81" stroke="#dc2626" stroke-width="2.0" stroke-linecap="round"/>
+<text x="28" y="622" font-family="Inter,Arial,sans-serif" font-size="14" fill="#64748b">schematic isometric SVG - bodies color coded</text>
+</svg>

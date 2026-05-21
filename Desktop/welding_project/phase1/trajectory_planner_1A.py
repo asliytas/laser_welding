@@ -226,9 +226,12 @@ def _make_setpoint(index, arc_length, pose, notes=None):
     )
 
 
-def _quat_angle_deg(q1, q2):
-    dot = abs(sum(q1[i] * q2[i] for i in range(4)))
-    return math.degrees(2.0 * math.acos(_clamp(dot, -1.0, 1.0)))
+def _torch_z_axis(rotation_matrix):
+    return (
+        rotation_matrix[0][2],
+        rotation_matrix[1][2],
+        rotation_matrix[2][2],
+    )
 
 
 def _radius_from_three_points(a, b, c):
@@ -262,10 +265,12 @@ def validate_program(program):
             program.notes.append(
                 f"Setpoint {b.index}: tangent jump {tangent_angle:.1f} deg, sharp corner"
             )
-        q_angle = _quat_angle_deg(a.pose.quaternion, b.pose.quaternion)
-        if q_angle > 30.0:
+        z_a = _torch_z_axis(a.pose.rotation_matrix)
+        z_b = _torch_z_axis(b.pose.rotation_matrix)
+        orientation_angle = _angle_between(z_a, z_b)
+        if orientation_angle > 30.0:
             program.notes.append(
-                f"Setpoint {b.index}: orientation jump {q_angle:.1f} deg"
+                f"Setpoint {b.index}: orientation jump {orientation_angle:.1f} deg"
             )
 
     for i in range(1, len(weld_points) - 1):

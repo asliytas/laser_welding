@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="28" y="38" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="700" fill="#111827">57 cone on plate gap 2mm</text>
+<polygon points="345.80,269.19 842.00,269.19 554.20,447.82 58.00,447.82" fill="#dbeafe" stroke="#2563eb" stroke-width="2.2" opacity="0.78" stroke-linejoin="round"/>
+<polygon points="345.80,310.54 842.00,310.54 842.00,269.19 345.80,269.19" fill="#ffffff" stroke="#2563eb" stroke-width="2.2" opacity="0.55" stroke-linejoin="round"/>
+<polygon points="842.00,310.54 554.20,489.17 554.20,447.82 842.00,269.19" fill="#ffffff" stroke="#2563eb" stroke-width="2.2" opacity="0.45" stroke-linejoin="round"/>
+<line x1="345.80" y1="310.54" x2="842.00" y2="310.54" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="842.00" y1="310.54" x2="554.20" y2="489.17" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="554.20" y1="489.17" x2="58.00" y2="489.17" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="58.00" y1="489.17" x2="345.80" y2="310.54" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="345.80" y1="269.19" x2="842.00" y2="269.19" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="842.00" y1="269.19" x2="554.20" y2="447.82" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="554.20" y1="447.82" x2="58.00" y2="447.82" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="58.00" y1="447.82" x2="345.80" y2="269.19" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="345.80" y1="310.54" x2="345.80" y2="269.19" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="842.00" y1="310.54" x2="842.00" y2="269.19" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="554.20" y1="489.17" x2="554.20" y2="447.82" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<line x1="58.00" y1="489.17" x2="58.00" y2="447.82" stroke="#2563eb" stroke-width="2.0" stroke-linecap="round"/>
+<polygon points="532.70,350.23 529.39,352.18 525.73,354.12 521.75,356.04 517.47,357.94 512.89,359.80 508.05,361.63 502.96,363.40 497.64,365.12 492.11,366.77 486.41,368.36 480.55,369.86 474.56,371.28 468.47,372.62 462.29,373.85 456.06,374.99 449.81,376.02 443.56,376.93 437.33,377.74 431.16,378.42 425.07,378.99 419.09,379.43 413.24,379.75 407.55,379.94 402.03,380.00 396.73,379.94 391.65,379.75 386.82,379.43 382.26,378.99 378.00,378.42 374.04,377.74 370.40,376.93 367.11,376.02 364.17,374.99 361.60,373.85 359.41,372.62 357.60,371.28 356.20,369.86 355.19,368.36 354.59,366.77 354.40,365.12 354.61,363.40 355.24,361.63 356.27,359.80 357.70,357.94 359.53,356.04 361.75,354.12 364.34,352.18 367.30,350.23 370.61,348.28 374.27,346.35 378.25,344.42 382.53,342.53 387.11,340.66 391.95,338.84 397.04,337.06 402.36,335.35 407.89,333.69 413.59,332.11 419.45,330.60 425.44,329.18 431.53,327.85 437.71,326.61 443.94,325.48 450.19,324.45 456.44,323.53 462.67,322.73 468.84,322.04 474.93,321.47 480.91,321.03 486.76,320.71 492.45,320.52 497.97,320.46 503.27,320.52 508.35,320.71 513.18,321.03 517.74,321.47 522.00,322.04 525.96,322.73 529.60,323.53 532.89,324.45 535.83,325.48 538.40,326.61 540.59,327.85 542.40,329.18 543.80,330.60 544.81,332.11 545.41,333.69 545.60,335.35 545.39,337.06 544.76,338.84 543.73,340.66 542.30,342.53 540.47,344.42 538.25,346.35 535.66,348.28" fill="none" stroke="#dc2626" stroke-width="2.4" opacity="1.0" stroke-linejoin="round"/>
+<line x1="367.30" y1="350.23" x2="450.00" y2="184.83" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round"/>
+<line x1="532.70" y1="350.23" x2="450.00" y2="184.83" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round"/>
+<text x="28" y="622" font-family="Inter,Arial,sans-serif" font-size="14" fill="#64748b">schematic isometric SVG - bodies color coded</text>
+</svg>
