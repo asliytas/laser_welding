@@ -41,7 +41,7 @@ from OCC.Core.BRep import BRep_Tool
 from OCC.Core.gp import gp_Pnt, gp_Vec
 from OCC.Core.TColgp import TColgp_Array1OfPnt
 
-PROXIMITY_THRESHOLD_MM   = 5.0
+PROXIMITY_THRESHOLD_MM   = 15.0
 EDGE_MIN_LENGTH          = 0.01
 WIRE_TOLERANCE           = 0.5
 COINCIDENT_LEN_TOL       = 0.01
@@ -50,14 +50,15 @@ COINCIDENT_DIST_TOL      = 0.1
 CONTINUITY_GAP_TOL       = 0.5
 DUPLICATE_TOL            = 0.5
 
-CLEARANCE_THRESHOLD_MM   = 5.0
+CLEARANCE_THRESHOLD_MM   = 15.0
 BRIDGING_MIN_DIST_MM     = 0.05
-BRIDGING_MAX_DIST_MM     = 5.0
+BRIDGING_MAX_DIST_MM     = 15.0
 BRIDGING_LEN_REL_TOL     = 0.15
 POINT_CONTACT_TOL_MM     = 1e-3
 POINT_CONTACT_CLUSTER_TOL = 0.2
 PLANAR_FACING_DOT_MIN    = 0.35
 VIRTUAL_MIDLINE_SAMPLE_COUNT = 40
+PROJECT_EDGE_FACE_MAX_DIST_MM = 15.0
 
 SEGMENT_PALETTE = [
     (0.85, 0.10, 0.10),
@@ -1361,14 +1362,22 @@ class MainWindow(QMainWindow):
 
         _, center = _face_info(face)
         projected = []
+        projection_distances = []
         for p in source_points:
             delta = _vec_between(center, p)
             offset = _vec_dot(delta, normal)
+            projection_distances.append(abs(offset))
             projected.append((
                 p[0] - normal[0] * offset,
                 p[1] - normal[1] * offset,
                 p[2] - normal[2] * offset,
             ))
+        max_projection_dist = max(projection_distances) if projection_distances else float("inf")
+        if max_projection_dist > PROJECT_EDGE_FACE_MAX_DIST_MM:
+            raise RuntimeError(
+                f"Source edge is {max_projection_dist:.2f} mm from the target face plane "
+                f"(limit {PROJECT_EDGE_FACE_MAX_DIST_MM:.2f} mm)."
+            )
         projected = self._dedupe_midpoints(projected)
         if len(projected) < 2:
             return None
