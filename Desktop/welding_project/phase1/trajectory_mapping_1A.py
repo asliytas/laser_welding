@@ -1,5 +1,6 @@
 import argparse
 import json
+import math
 import os
 import sys
 from dataclasses import asdict, dataclass, field
@@ -230,7 +231,7 @@ def wire_to_compcurve(wire):
 
 def discretize_uniform(compcurve, u_min, u_max, step_mm):
     """
-    Sample a wire at roughly uniform arc-length intervals.
+    Sample a wire at uniform arc-length intervals no farther apart than step_mm.
     Returns list of (u_param, arc_length) tuples sorted from start to end.
     """
     _require_occ()
@@ -241,10 +242,10 @@ def discretize_uniform(compcurve, u_min, u_max, step_mm):
     if total_len <= 1e-9:
         return [(u_min, 0.0)]
 
-    if total_len < step_mm:
-        return [(u_min, 0.0), (u_max, total_len)]
+    n_intervals = max(1, int(math.ceil(total_len / step_mm)))
+    actual_step = total_len / n_intervals
 
-    abs_calc = GCPnts_UniformAbscissa(compcurve, step_mm, u_min, u_max)
+    abs_calc = GCPnts_UniformAbscissa(compcurve, actual_step, u_min, u_max)
     if not abs_calc.IsDone():
         return [(u_min, 0.0), (u_max, total_len)]
 
@@ -254,7 +255,20 @@ def discretize_uniform(compcurve, u_min, u_max, step_mm):
         arc = GCPnts_AbscissaPoint.Length(compcurve, u_min, u)
         samples.append((u, arc))
 
-    if samples and abs(samples[-1][1] - total_len) > max(1e-6, step_mm * 0.25):
+    tol = max(1e-6, total_len * 1e-9)
+    if not samples or abs(samples[0][1]) > tol:
+        samples.insert(0, (u_min, 0.0))
+
+    is_closed = False
+    try:
+        is_closed = bool(compcurve.IsClosed())
+    except Exception:
+        is_closed = False
+
+    if is_closed:
+        if samples and abs(samples[-1][1] - total_len) <= tol:
+            samples.pop()
+    elif not samples or abs(samples[-1][1] - total_len) > tol:
         samples.append((u_max, total_len))
     return samples
 
@@ -397,7 +411,7 @@ def compute_segment_trajectory(segment_dict, step_mm, point_offset=0):
     _repair_singular_tangents(points, notes)
     return points, notes
 
-def compute_weld_trajectory(weld_dict, step_mm=1.0):
+def compute_weld_trajectory(weld_dict, step_mm=30.0):
     """
     Compute one WeldTrajectory from a 5.K weld dictionary.
     Segment order is preserved.
@@ -447,7 +461,7 @@ def compute_weld_trajectory(weld_dict, step_mm=1.0):
         notes=all_notes,
     )
 
-def compute_trajectories(welds, step_mm=1.0):
+def compute_trajectories(welds, step_mm=30.0):
     return [compute_weld_trajectory(weld, step_mm=step_mm) for weld in welds]
 
 def save_trajectory_json(trajectories, filepath):
@@ -479,7 +493,7 @@ def load_trajectory_json(filepath):
             segments_meta=tdict.get("segments_meta", []),
             points=points,
             total_length=tdict.get("total_length", 0.0),
-            discretization_step_mm=tdict.get("discretization_step_mm", 1.0),
+            discretization_step_mm=tdict.get("discretization_step_mm", 30.0),
             notes=tdict.get("notes", []),
         ))
     return out
@@ -588,7 +602,7 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
         self.step_spin = QDoubleSpinBox()
         self.step_spin.setRange(0.01, 1000.0)
         self.step_spin.setDecimals(3)
-        self.step_spin.setValue(1.0)
+        self.step_spin.setValue(30.0)
         self.step_spin.setSuffix(" mm")
 
         self.chk_points = QCheckBox("Points")
@@ -745,6 +759,7 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
         self.path_selection_window.showNormal()
         self.path_selection_window.raise_()
         self.path_selection_window.activateWindow()
+        self.hide()
 
     def _connect_signals(self):
         self.chk_points.stateChanged.connect(self.refresh_viewer)
@@ -792,7 +807,7 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
         except Exception as exc:
             QMessageBox.critical(self, "Open Failed", str(exc))
 
-    def load_welds(self, welds, step_file_path=None, step_mm=1.0):
+    def load_welds(self, welds, step_file_path=None, step_mm=30.0):
         self.welds = welds or []
         self.step_file_path = step_file_path
         self.step_spin.setValue(float(step_mm))
@@ -883,6 +898,7 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
 
         tangent_color = Quantity_Color(1.0, 0.85, 0.05, Quantity_TOC_RGB)
         normal_color = Quantity_Color(0.05, 0.85, 0.20, Quantity_TOC_RGB)
+        vector_len = max(10.0, min(60.0, self.step_spin.value() * 0.75))
 
         for traj_idx, traj in enumerate(self.trajectories):
             point_color = _trajectory_color(traj_idx)
@@ -892,16 +908,16 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
                     self._display_shape(BRepBuilderAPI_MakeVertex(base).Vertex(), color=point_color)
                 if self.chk_tangents.isChecked() and p.tangent != (0.0, 0.0, 0.0):
                     end = gp_Pnt(
-                        p.position[0] + p.tangent[0] * 5.0,
-                        p.position[1] + p.tangent[1] * 5.0,
-                        p.position[2] + p.tangent[2] * 5.0,
+                        p.position[0] + p.tangent[0] * vector_len,
+                        p.position[1] + p.tangent[1] * vector_len,
+                        p.position[2] + p.tangent[2] * vector_len,
                     )
                     self._display_shape(BRepBuilderAPI_MakeEdge(base, end).Edge(), color=tangent_color)
                 if self.chk_normals.isChecked() and p.normal != (0.0, 0.0, 0.0):
                     end = gp_Pnt(
-                        p.position[0] + p.normal[0] * 5.0,
-                        p.position[1] + p.normal[1] * 5.0,
-                        p.position[2] + p.normal[2] * 5.0,
+                        p.position[0] + p.normal[0] * vector_len,
+                        p.position[1] + p.normal[1] * vector_len,
+                        p.position[2] + p.normal[2] * vector_len,
                     )
                     self._display_shape(BRepBuilderAPI_MakeEdge(base, end).Edge(), color=normal_color)
 
@@ -941,6 +957,7 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
                     parent=self,
                 )
                 self.planner_windows.append(window)
+            self.hide()
             self.statusBar().showMessage(
                 f"Trajectory planner opened for {len(self.trajectories)} weld trajectory object(s)."
             )
@@ -966,7 +983,7 @@ class TrajectoryMappingWindow(QMainWindow if QT_AVAILABLE else object):
             f"Step: {self.step_spin.value():.3f} mm"
         )
 
-def launch_with_welds(welds, step_file_path=None, parent=None, step_mm=1.0):
+def launch_with_welds(welds, step_file_path=None, parent=None, step_mm=30.0):
     """
     In-process entry point for main_updated_5.K.py.
     welds must be the live 5.K MainWindow.welds structure, including wire/face objects.
@@ -1010,7 +1027,7 @@ def _run_cli(args):
 def main(argv=None):
     parser = argparse.ArgumentParser(description="Trajectory Mapping 1.A")
     parser.add_argument("--input", help="Input JSON path")
-    parser.add_argument("--step", type=float, default=1.0, help="Discretization step in mm")
+    parser.add_argument("--step", type=float, default=30.0, help="Discretization step in mm")
     parser.add_argument("--output", help="Output trajectory JSON path")
     parser.add_argument("--gui", action="store_true", help="Open standalone GUI")
     args = parser.parse_args(argv)

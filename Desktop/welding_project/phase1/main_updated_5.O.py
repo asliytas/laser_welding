@@ -355,7 +355,6 @@ class MainWindow(QMainWindow):
         QShortcut(QKeySequence(Qt.Key_Delete), self, activated=self._sc_delete)
         QShortcut(QKeySequence("Ctrl+Z"),      self, activated=self.undo_last_segment)
         QShortcut(QKeySequence("Ctrl+T"),      self, activated=self.proceed_to_trajectory_mapping)
-        QShortcut(QKeySequence("Ctrl+P"),      self, activated=self.proceed_to_trajectory_planner)
 
     def _sc_add_segment(self):
         if (self.radio_auto.isChecked()
@@ -597,15 +596,6 @@ class MainWindow(QMainWindow):
         self.btn_trajectory.clicked.connect(self.proceed_to_trajectory_mapping)
         self.btn_trajectory.setEnabled(False)
         workflow_layout.addWidget(self.btn_trajectory)
-
-        self.btn_planner = QPushButton("Quick Plan (Skip Mapping)")
-        self.btn_planner.setToolTip(
-            "Skip the trajectory mapping window: generate WeldPoints internally, "
-            "then open the trajectory planner (Ctrl+P)"
-        )
-        self.btn_planner.clicked.connect(self.proceed_to_trajectory_planner)
-        self.btn_planner.setEnabled(False)
-        workflow_layout.addWidget(self.btn_planner)
         workflow_box.setLayout(workflow_layout)
         v.addWidget(workflow_box)
 
@@ -704,7 +694,7 @@ class MainWindow(QMainWindow):
         if auto_checked:
             self._activate_selection_mode(SEL_MODE_FACE)
             for w in (self.btn_add_segment, self.btn_undo,
-                      self.btn_trajectory, self.btn_planner,
+                      self.btn_trajectory,
                       self.btn_clear_segments, self.btn_reset_faces,
                       self.btn_delete_segment, self.btn_move_up,
                       self.btn_move_down, self.lbl_face_a, self.lbl_face_b,
@@ -720,7 +710,7 @@ class MainWindow(QMainWindow):
             self.lbl_face_a.setVisible(False)
             self.lbl_face_b.setVisible(False)
             for w in (self.btn_undo, self.btn_clear_segments,
-                      self.btn_trajectory, self.btn_planner,
+                      self.btn_trajectory,
                       self.btn_delete_segment, self.btn_move_up,
                       self.btn_move_down, self.lbl_segments, self.lbl_legend,
                       self.segment_list, self.weld_box):
@@ -2139,9 +2129,10 @@ class MainWindow(QMainWindow):
                     ready_welds,
                     step_file_path=self.current_step_file,
                     parent=self,
-                    step_mm=1.0,
+                    step_mm=30.0,
                 )
                 self.trajectory_windows.append(window)
+            self.hide()
             msg = (
                 f"Trajectory mapping opened for {len(ready_welds)} path(s)."
             )
@@ -2152,57 +2143,6 @@ class MainWindow(QMainWindow):
         except Exception as e:
             print(f"[TRAJ] Launch failed: {e}")
             QMessageBox.critical(self, "Trajectory Mapping Failed", str(e))
-
-    def proceed_to_trajectory_planner(self):
-        total_segments = sum(len(w["segments"]) for w in self.welds)
-        if total_segments == 0:
-            QMessageBox.information(self, "No Path", "No segments to plan.")
-            return
-
-        ready_welds, skipped = self._trajectory_ready_welds()
-        if not ready_welds:
-            QMessageBox.warning(
-                self,
-                "No Wire Geometry",
-                "No wire-based segments were available for trajectory planning."
-            )
-            return
-
-        try:
-            import trajectory_mapping_1A
-            import trajectory_planner_1A
-
-            trajectories = trajectory_mapping_1A.compute_trajectories(
-                ready_welds,
-                step_mm=1.0,
-            )
-            window = self.planner_windows[-1] if self.planner_windows else None
-            if window is not None:
-                try:
-                    window.load_trajectories(trajectories)
-                    window.showNormal()
-                    window.raise_()
-                    window.activateWindow()
-                except RuntimeError:
-                    window = None
-            if window is None:
-                window = trajectory_planner_1A.launch_with_trajectories(
-                    trajectories,
-                    parent=self,
-                )
-                self.planner_windows.append(window)
-
-            msg = (
-                "Quick plan opened trajectory planner after generating WeldPoints "
-                f"internally for {len(trajectories)} weld trajectory object(s)."
-            )
-            if skipped:
-                msg += f" Skipped {skipped} non-wire segment(s), such as point contacts."
-            self.statusBar().showMessage(msg)
-            print(f"[PLAN] {msg}")
-        except Exception as e:
-            print(f"[PLAN] Launch failed: {e}")
-            QMessageBox.critical(self, "Trajectory Planner Failed", str(e))
 
     def _segments_to_json(self):
         def segment_to_json(i, seg):
@@ -2307,7 +2247,6 @@ class MainWindow(QMainWindow):
         self.lbl_segments.setText(f"Segments: {len(segments)}  |  Total: {total:.1f} mm")
         any_segments = any(w["segments"] for w in self.welds)
         self.btn_trajectory.setEnabled(any_segments)
-        self.btn_planner.setEnabled(any_segments)
         self.btn_clear_segments.setEnabled(bool(segments))
         self.btn_undo.setEnabled(bool(segments))
 

@@ -1,10 +1,9 @@
 import argparse
+import csv
 import json
 import math
-import os
 import sys
 from dataclasses import asdict, dataclass, field
-from typing import Optional
 
 try:
     from trajectory_mapping_1A import (
@@ -29,24 +28,16 @@ class TCPPose:
 
 @dataclass
 class TrajectorySetpoint:
-    """Timed, posed, and process-aware robot setpoint."""
+    """Posed TCP setpoint derived from one mapped weld point."""
     index: int
-    timestamp: float
     arc_length: float
     phase: str
     pose: TCPPose
-    velocity: float
-    acceleration: float
-    laser_power: float
-    wire_feed_rate: float
-    shielding_gas_flow: float
-    focus_offset: float
     notes: list = field(default_factory=list)
 
     def to_dict(self):
         return {
             "index": self.index,
-            "timestamp": self.timestamp,
             "arc_length": self.arc_length,
             "phase": self.phase,
             "pose": {
@@ -55,22 +46,8 @@ class TrajectorySetpoint:
                 "quaternion": list(self.pose.quaternion),
                 "euler_zyx_deg": list(self.pose.euler_zyx_deg),
             },
-            "velocity": self.velocity,
-            "acceleration": self.acceleration,
-            "laser_power": self.laser_power,
-            "wire_feed_rate": self.wire_feed_rate,
-            "shielding_gas_flow": self.shielding_gas_flow,
-            "focus_offset": self.focus_offset,
             "notes": list(self.notes),
         }
-
-
-@dataclass
-class MotionConfig:
-    target_speed_mm_s: float = 20.0
-    acceleration_max_mm_s2: float = 200.0
-    jerk_max_mm_s3: float = 2000.0
-    profile: str = "trapezoidal"
 
 
 @dataclass
@@ -81,50 +58,19 @@ class TCPConfig:
 
 
 @dataclass
-class ApproachRetractConfig:
-    distance_mm: float = 20.0
-    speed_mm_s: float = 50.0
-    direction: str = "normal_positive"
-    custom_vector: Optional[tuple] = None
-    n_points: int = 5
-
-
-@dataclass
-class ProcessConfig:
-    laser_power_w: float = 1500.0
-    wire_feed_rate: float = 5.0
-    shielding_gas_flow: float = 15.0
-    focus_offset_mm: float = 0.0
-    ramp_up_time_s: float = 0.2
-    ramp_down_time_s: float = 0.2
-
-
-@dataclass
 class WeldProgram:
     weld_id: int
     weld_name: str
-    motion: MotionConfig
     tcp: TCPConfig
-    approach: ApproachRetractConfig
-    retract: ApproachRetractConfig
-    process: ProcessConfig
     setpoints: list = field(default_factory=list)
-    total_duration_s: float = 0.0
-    weld_duration_s: float = 0.0
     notes: list = field(default_factory=list)
 
     def to_dict(self):
         return {
             "weld_id": self.weld_id,
             "weld_name": self.weld_name,
-            "motion": asdict(self.motion),
             "tcp": asdict(self.tcp),
-            "approach": asdict(self.approach),
-            "retract": asdict(self.retract),
-            "process": asdict(self.process),
             "setpoints": [s.to_dict() for s in self.setpoints],
-            "total_duration_s": self.total_duration_s,
-            "weld_duration_s": self.weld_duration_s,
             "notes": list(self.notes),
         }
 
@@ -270,174 +216,14 @@ def compute_tcp_frame(position, tangent, normal, tcp_config=None):
     ), notes
 
 
-def plan_trapezoidal(arc_lengths, v_target, a_max):
-    notes = []
-    if not arc_lengths:
-        return [], notes
-    if v_target <= 0 or a_max <= 0:
-        raise ValueError("target speed and acceleration must be positive")
-
-    total = max(0.0, arc_lengths[-1])
-    if total <= 1e-9:
-        return [(0.0, 0.0, 0.0) for _ in arc_lengths], notes
-
-    s_acc_target = v_target * v_target / (2.0 * a_max)
-    if 2.0 * s_acc_target > total:
-        v_peak = math.sqrt(a_max * total)
-        s_acc = total / 2.0
-        s_const = 0.0
-        notes.append(
-            f"weld too short for target speed, reaching peak v={v_peak:.2f} mm/s"
-        )
-    else:
-        v_peak = v_target
-        s_acc = s_acc_target
-        s_const = total - 2.0 * s_acc
-
-    t_acc = v_peak / a_max
-    t_const = s_const / v_peak if v_peak > 1e-9 else 0.0
-    out = []
-    for s in arc_lengths:
-        s = _clamp(s, 0.0, total)
-        if s <= s_acc or total <= 1e-9:
-            v = math.sqrt(max(0.0, 2.0 * a_max * s))
-            t = v / a_max
-            a = a_max if v > 1e-9 else 0.0
-        elif s <= s_acc + s_const:
-            v = v_peak
-            t = t_acc + (s - s_acc) / v_peak
-            a = 0.0
-        else:
-            remaining = max(0.0, total - s)
-            v = math.sqrt(max(0.0, 2.0 * a_max * remaining))
-            t = t_acc + t_const + (v_peak - v) / a_max
-            a = -a_max if v > 1e-9 else 0.0
-        out.append((t, v, a))
-    return out, notes
-
-
-def plan_s_curve(arc_lengths, v_target, a_max, j_max):
-    profile, notes = plan_trapezoidal(arc_lengths, v_target, a_max)
-    notes.append("S-curve fallback to trapezoidal in planner 1.A")
-    return profile, notes
-
-
-def _direction_from_config(normal, config):
-    if config.direction == "world_z":
-        return (0.0, 0.0, 1.0)
-    if config.direction == "custom" and config.custom_vector is not None:
-        return _normalize(config.custom_vector, default=(0.0, 0.0, 1.0))[0]
-    return _normalize(normal, default=(0.0, 0.0, 1.0))[0]
-
-
-def _process_zero(process):
-    return {
-        "laser_power": 0.0,
-        "wire_feed_rate": 0.0,
-        "shielding_gas_flow": process.shielding_gas_flow,
-        "focus_offset": process.focus_offset_mm,
-    }
-
-
-def _make_setpoint(index, timestamp, arc_length, phase, pose, velocity, acceleration, process_values, notes=None):
+def _make_setpoint(index, arc_length, pose, notes=None):
     return TrajectorySetpoint(
         index=index,
-        timestamp=timestamp,
         arc_length=arc_length,
-        phase=phase,
+        phase="weld",
         pose=pose,
-        velocity=velocity,
-        acceleration=acceleration,
-        laser_power=process_values["laser_power"],
-        wire_feed_rate=process_values["wire_feed_rate"],
-        shielding_gas_flow=process_values["shielding_gas_flow"],
-        focus_offset=process_values["focus_offset"],
         notes=list(notes or []),
     )
-
-
-def compute_approach_points(first_weld_setpoint, normal_at_start, config, process, start_index=0):
-    direction = _direction_from_config(normal_at_start, config)
-    n_points = max(2, int(config.n_points))
-    start_pos = first_weld_setpoint.pose.position
-    start_time = -config.distance_mm / max(config.speed_mm_s, 1e-9)
-    points = []
-    for i in range(n_points):
-        alpha = i / (n_points - 1)
-        offset = config.distance_mm * (1.0 - alpha)
-        pos = _v_add(start_pos, _v_mul(direction, offset))
-        pose = TCPPose(
-            position=pos,
-            rotation_matrix=first_weld_setpoint.pose.rotation_matrix,
-            quaternion=first_weld_setpoint.pose.quaternion,
-            euler_zyx_deg=first_weld_setpoint.pose.euler_zyx_deg,
-        )
-        points.append(_make_setpoint(
-            start_index + i,
-            start_time * (1.0 - alpha),
-            -offset,
-            "approach",
-            pose,
-            config.speed_mm_s,
-            0.0,
-            _process_zero(process),
-        ))
-    return points
-
-
-def compute_retract_points(last_weld_setpoint, normal_at_end, config, process, start_index=0):
-    direction = _direction_from_config(normal_at_end, config)
-    n_points = max(2, int(config.n_points))
-    start_pos = last_weld_setpoint.pose.position
-    points = []
-    base_time = last_weld_setpoint.timestamp
-    for i in range(1, n_points + 1):
-        alpha = i / n_points
-        offset = config.distance_mm * alpha
-        pos = _v_add(start_pos, _v_mul(direction, offset))
-        pose = TCPPose(
-            position=pos,
-            rotation_matrix=last_weld_setpoint.pose.rotation_matrix,
-            quaternion=last_weld_setpoint.pose.quaternion,
-            euler_zyx_deg=last_weld_setpoint.pose.euler_zyx_deg,
-        )
-        points.append(_make_setpoint(
-            start_index + i - 1,
-            base_time + offset / max(config.speed_mm_s, 1e-9),
-            last_weld_setpoint.arc_length + offset,
-            "retract",
-            pose,
-            config.speed_mm_s,
-            0.0,
-            _process_zero(process),
-        ))
-    return points
-
-
-def _process_values_at(timestamp, weld_duration, process):
-    ramp_up = max(0.0, process.ramp_up_time_s)
-    ramp_down = max(0.0, process.ramp_down_time_s)
-    scale = 1.0
-    if ramp_up > 1e-9 and timestamp < ramp_up:
-        scale = timestamp / ramp_up
-    if ramp_down > 1e-9 and timestamp > weld_duration - ramp_down:
-        scale = min(scale, max(0.0, (weld_duration - timestamp) / ramp_down))
-    scale = _clamp(scale, 0.0, 1.0)
-    return {
-        "laser_power": process.laser_power_w * scale,
-        "wire_feed_rate": process.wire_feed_rate * scale,
-        "shielding_gas_flow": process.shielding_gas_flow,
-        "focus_offset": process.focus_offset_mm,
-    }
-
-
-def apply_process_profile(weld_setpoints, process_config, weld_total_duration):
-    for sp in weld_setpoints:
-        values = _process_values_at(sp.timestamp, weld_total_duration, process_config)
-        sp.laser_power = values["laser_power"]
-        sp.wire_feed_rate = values["wire_feed_rate"]
-        sp.shielding_gas_flow = values["shielding_gas_flow"]
-        sp.focus_offset = values["focus_offset"]
 
 
 def _quat_angle_deg(q1, q2):
@@ -481,10 +267,6 @@ def validate_program(program):
             program.notes.append(
                 f"Setpoint {b.index}: orientation jump {q_angle:.1f} deg"
             )
-        if abs(b.velocity - a.velocity) > 0.5 * max(program.motion.target_speed_mm_s, 1e-9):
-            program.notes.append(
-                f"Setpoint {b.index}: velocity discontinuity {abs(b.velocity - a.velocity):.1f} mm/s"
-            )
 
     for i in range(1, len(weld_points) - 1):
         radius = _radius_from_three_points(
@@ -499,20 +281,12 @@ def validate_program(program):
     return program.notes
 
 
-def plan_weld(trajectory, motion=None, tcp=None, approach=None, retract=None, process=None):
-    motion = motion or MotionConfig()
+def plan_weld(trajectory, tcp=None):
     tcp = tcp or TCPConfig()
-    approach = approach or ApproachRetractConfig()
-    retract = retract or ApproachRetractConfig()
-    process = process or ProcessConfig()
     program = WeldProgram(
         weld_id=trajectory.weld_id,
         weld_name=trajectory.weld_name,
-        motion=motion,
         tcp=tcp,
-        approach=approach,
-        retract=retract,
-        process=process,
     )
 
     points = list(trajectory.points)
@@ -520,73 +294,21 @@ def plan_weld(trajectory, motion=None, tcp=None, approach=None, retract=None, pr
         program.notes.append("trajectory has no points")
         return program
 
-    arc_lengths = [float(p.arc_length) for p in points]
-    if motion.profile == "s_curve":
-        profile, notes = plan_s_curve(
-            arc_lengths,
-            motion.target_speed_mm_s,
-            motion.acceleration_max_mm_s2,
-            motion.jerk_max_mm_s3,
-        )
-    else:
-        profile, notes = plan_trapezoidal(
-            arc_lengths,
-            motion.target_speed_mm_s,
-            motion.acceleration_max_mm_s2,
-        )
-    program.notes.extend(notes)
-
-    weld_setpoints = []
     for i, point in enumerate(points):
         pose, pose_notes = compute_tcp_frame(point.position, point.tangent, point.normal, tcp)
-        timestamp, velocity, acceleration = profile[i]
-        sp = _make_setpoint(
+        program.setpoints.append(_make_setpoint(
             i,
-            timestamp,
             point.arc_length,
-            "weld",
             pose,
-            velocity,
-            acceleration,
-            _process_values_at(timestamp, profile[-1][0], process),
             notes=pose_notes,
-        )
-        weld_setpoints.append(sp)
+        ))
 
-    weld_duration = profile[-1][0] if profile else 0.0
-    apply_process_profile(weld_setpoints, process, weld_duration)
-
-    first_normal = points[0].normal
-    last_normal = points[-1].normal
-    approach_setpoints = compute_approach_points(
-        weld_setpoints[0], first_normal, approach, process, start_index=0
-    )
-    weld_index_offset = len(approach_setpoints)
-    for i, sp in enumerate(weld_setpoints):
-        sp.index = weld_index_offset + i
-
-    retract_setpoints = compute_retract_points(
-        weld_setpoints[-1],
-        last_normal,
-        retract,
-        process,
-        start_index=weld_index_offset + len(weld_setpoints),
-    )
-
-    program.setpoints = approach_setpoints + weld_setpoints + retract_setpoints
-    for i, sp in enumerate(program.setpoints):
-        sp.index = i
-    program.weld_duration_s = weld_duration
-    program.total_duration_s = max(sp.timestamp for sp in program.setpoints)
     validate_program(program)
     return program
 
 
-def plan_all_welds(trajectories, motion=None, tcp=None, approach=None, retract=None, process=None):
-    return [
-        plan_weld(t, motion=motion, tcp=tcp, approach=approach, retract=retract, process=process)
-        for t in trajectories
-    ]
+def plan_all_welds(trajectories, tcp=None):
+    return [plan_weld(t, tcp=tcp) for t in trajectories]
 
 
 def _pose_from_dict(data):
@@ -601,16 +323,9 @@ def _pose_from_dict(data):
 def _setpoint_from_dict(data):
     return TrajectorySetpoint(
         index=data["index"],
-        timestamp=data["timestamp"],
         arc_length=data["arc_length"],
         phase=data["phase"],
         pose=_pose_from_dict(data["pose"]),
-        velocity=data["velocity"],
-        acceleration=data["acceleration"],
-        laser_power=data["laser_power"],
-        wire_feed_rate=data["wire_feed_rate"],
-        shielding_gas_flow=data["shielding_gas_flow"],
-        focus_offset=data["focus_offset"],
         notes=data.get("notes", []),
     )
 
@@ -619,14 +334,8 @@ def _program_from_dict(data):
     return WeldProgram(
         weld_id=data["weld_id"],
         weld_name=data["weld_name"],
-        motion=MotionConfig(**data.get("motion", {})),
         tcp=TCPConfig(**data.get("tcp", {})),
-        approach=ApproachRetractConfig(**data.get("approach", {})),
-        retract=ApproachRetractConfig(**data.get("retract", {})),
-        process=ProcessConfig(**data.get("process", {})),
         setpoints=[_setpoint_from_dict(s) for s in data.get("setpoints", [])],
-        total_duration_s=data.get("total_duration_s", 0.0),
-        weld_duration_s=data.get("weld_duration_s", 0.0),
         notes=data.get("notes", []),
     )
 
@@ -641,21 +350,28 @@ def save_program_json(programs, filepath):
         json.dump(payload, f, indent=2, ensure_ascii=False)
 
 
+def save_program_csv(programs, filepath):
+    with open(filepath, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        for program in programs:
+            for sp in program.setpoints:
+                if sp.phase != "weld":
+                    continue
+                R = sp.pose.rotation_matrix
+                writer.writerow([
+                    sp.pose.position[0],
+                    sp.pose.position[1],
+                    sp.pose.position[2],
+                    R[0][2],
+                    R[1][2],
+                    R[2][2],
+                ])
+
+
 def load_program_json(filepath):
     with open(filepath, "r", encoding="utf-8") as f:
         payload = json.load(f)
     return [_program_from_dict(p) for p in payload.get("programs", [])]
-
-
-def _velocity_color_tuple(v, v_max):
-    if v_max <= 1e-9:
-        return (0.1, 0.3, 0.9)
-    x = _clamp(v / v_max, 0.0, 1.0)
-    if x < 0.5:
-        k = x / 0.5
-        return (0.1, 0.3 + 0.6 * k, 0.9 * (1.0 - k))
-    k = (x - 0.5) / 0.5
-    return (0.1 + 0.9 * k, 0.9 - 0.15 * k, 0.05)
 
 
 try:
@@ -666,7 +382,6 @@ try:
         QApplication,
         QCheckBox,
         QComboBox,
-        QDoubleSpinBox,
         QFileDialog,
         QGroupBox,
         QHBoxLayout,
@@ -750,46 +465,19 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
         self.trajectories = []
         self.programs = []
         self._displayed = []
-
         self.weld_list = QListWidget()
         self.notes_edit = QTextEdit()
         self.notes_edit.setReadOnly(True)
 
-        self.profile_combo = QComboBox()
-        self.profile_combo.addItems(["trapezoidal", "s_curve"])
         self.tcp_combo = QComboBox()
         self.tcp_combo.addItems(["bisector_normal", "world_z_up", "custom"])
-
-        self.speed_spin = self._spin(0.1, 10000.0, 20.0, " mm/s")
-        self.accel_spin = self._spin(0.1, 100000.0, 200.0, " mm/s2")
-        self.jerk_spin = self._spin(0.1, 1000000.0, 2000.0, " mm/s3")
         self.flip_z_check = QCheckBox("Flip torch Z")
-
-        self.approach_dist_spin = self._spin(0.0, 1000.0, 20.0, " mm")
-        self.approach_speed_spin = self._spin(0.1, 10000.0, 50.0, " mm/s")
-        self.retract_dist_spin = self._spin(0.0, 1000.0, 20.0, " mm")
-        self.retract_speed_spin = self._spin(0.1, 10000.0, 50.0, " mm/s")
-
-        self.laser_spin = self._spin(0.0, 100000.0, 1500.0, " W")
-        self.feed_spin = self._spin(0.0, 1000.0, 5.0, " m/min")
-        self.gas_spin = self._spin(0.0, 1000.0, 15.0, " L/min")
-        self.focus_spin = self._spin(-100.0, 100.0, 0.0, " mm")
-        self.ramp_up_spin = self._spin(0.0, 100.0, 0.2, " s")
-        self.ramp_down_spin = self._spin(0.0, 100.0, 0.2, " s")
         self.chk_frames = QCheckBox("TCP frames")
         self.chk_frames.setChecked(True)
 
         self._create_menu()
         self._create_layout()
         self._update_status_bar()
-
-    def _spin(self, lo, hi, value, suffix):
-        spin = QDoubleSpinBox()
-        spin.setRange(lo, hi)
-        spin.setDecimals(3)
-        spin.setValue(value)
-        spin.setSuffix(suffix)
-        return spin
 
     def _create_menu(self):
         file_menu = self.menuBar().addMenu("File")
@@ -798,15 +486,10 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
         open_action.triggered.connect(self.open_trajectory_json)
         file_menu.addAction(open_action)
 
-        save_action = QAction("Save Program JSON", self)
+        save_action = QAction("Save JSON + CSV", self)
         save_action.setShortcut(QKeySequence("Ctrl+S"))
         save_action.triggered.connect(self.save_program_dialog)
         file_menu.addAction(save_action)
-
-        export_action = QAction("Export for Robot", self)
-        export_action.setShortcut(QKeySequence("Ctrl+E"))
-        export_action.triggered.connect(self.export_robot_dialog)
-        file_menu.addAction(export_action)
 
         workspace_menu = self.menuBar().addMenu("Workspace")
         back_action = QAction("Back to Previous Window", self)
@@ -832,10 +515,7 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
         panel_layout.addWidget(self._navigate_box())
         panel_layout.addWidget(QLabel("Welds"))
         panel_layout.addWidget(self.weld_list)
-        panel_layout.addWidget(self._motion_box())
         panel_layout.addWidget(self._tcp_box())
-        panel_layout.addWidget(self._approach_box())
-        panel_layout.addWidget(self._process_box())
 
         apply_selected = QPushButton("Apply to selected weld")
         apply_selected.clicked.connect(self.apply_selected)
@@ -846,15 +526,9 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
 
         panel_layout.addWidget(QLabel("Notes"))
         panel_layout.addWidget(self.notes_edit, stretch=2)
-        save_btn = QPushButton("Save Program JSON")
+        save_btn = QPushButton("Save JSON + CSV")
         save_btn.clicked.connect(self.save_program_dialog)
-        export_btn = QPushButton("Export for Robot")
-        export_btn.clicked.connect(self.export_robot_dialog)
-        load_robodk_btn = QPushButton("Load to RoboDK")
-        load_robodk_btn.clicked.connect(self.load_to_robodk_dialog)
         panel_layout.addWidget(save_btn)
-        panel_layout.addWidget(export_btn)
-        panel_layout.addWidget(load_robodk_btn)
 
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
@@ -866,19 +540,6 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
         layout.addWidget(self.viewer, stretch=5)
         layout.addWidget(scroll, stretch=2)
         self.setCentralWidget(container)
-
-    def _motion_box(self):
-        box = QGroupBox("Motion")
-        layout = QVBoxLayout(box)
-        layout.addWidget(QLabel("Profile"))
-        layout.addWidget(self.profile_combo)
-        layout.addWidget(QLabel("Target speed"))
-        layout.addWidget(self.speed_spin)
-        layout.addWidget(QLabel("Max acceleration"))
-        layout.addWidget(self.accel_spin)
-        layout.addWidget(QLabel("Max jerk"))
-        layout.addWidget(self.jerk_spin)
-        return box
 
     def _navigate_box(self):
         box = QGroupBox("Navigate")
@@ -923,64 +584,11 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
         layout.addWidget(self.chk_frames)
         return box
 
-    def _approach_box(self):
-        box = QGroupBox("Approach / Retract")
-        layout = QVBoxLayout(box)
-        layout.addWidget(QLabel("Approach distance"))
-        layout.addWidget(self.approach_dist_spin)
-        layout.addWidget(QLabel("Approach speed"))
-        layout.addWidget(self.approach_speed_spin)
-        layout.addWidget(QLabel("Retract distance"))
-        layout.addWidget(self.retract_dist_spin)
-        layout.addWidget(QLabel("Retract speed"))
-        layout.addWidget(self.retract_speed_spin)
-        return box
-
-    def _process_box(self):
-        box = QGroupBox("Process")
-        layout = QVBoxLayout(box)
-        layout.addWidget(QLabel("Laser power"))
-        layout.addWidget(self.laser_spin)
-        layout.addWidget(QLabel("Wire feed"))
-        layout.addWidget(self.feed_spin)
-        layout.addWidget(QLabel("Gas flow"))
-        layout.addWidget(self.gas_spin)
-        layout.addWidget(QLabel("Focus offset"))
-        layout.addWidget(self.focus_spin)
-        layout.addWidget(QLabel("Ramp up"))
-        layout.addWidget(self.ramp_up_spin)
-        layout.addWidget(QLabel("Ramp down"))
-        layout.addWidget(self.ramp_down_spin)
-        return box
-
     def _configs_from_ui(self):
-        motion = MotionConfig(
-            target_speed_mm_s=self.speed_spin.value(),
-            acceleration_max_mm_s2=self.accel_spin.value(),
-            jerk_max_mm_s3=self.jerk_spin.value(),
-            profile=self.profile_combo.currentText(),
-        )
-        tcp = TCPConfig(
+        return TCPConfig(
             strategy=self.tcp_combo.currentText(),
             flip_torch_z=self.flip_z_check.isChecked(),
         )
-        approach = ApproachRetractConfig(
-            distance_mm=self.approach_dist_spin.value(),
-            speed_mm_s=self.approach_speed_spin.value(),
-        )
-        retract = ApproachRetractConfig(
-            distance_mm=self.retract_dist_spin.value(),
-            speed_mm_s=self.retract_speed_spin.value(),
-        )
-        process = ProcessConfig(
-            laser_power_w=self.laser_spin.value(),
-            wire_feed_rate=self.feed_spin.value(),
-            shielding_gas_flow=self.gas_spin.value(),
-            focus_offset_mm=self.focus_spin.value(),
-            ramp_up_time_s=self.ramp_up_spin.value(),
-            ramp_down_time_s=self.ramp_down_spin.value(),
-        )
-        return motion, tcp, approach, retract, process
 
     def load_trajectories(self, trajectories):
         self.trajectories = trajectories or []
@@ -1011,15 +619,7 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
             self._plan_index(i)
 
     def _plan_index(self, i):
-        motion, tcp, approach, retract, process = self._configs_from_ui()
-        self.programs[i] = plan_weld(
-            self.trajectories[i],
-            motion=motion,
-            tcp=tcp,
-            approach=approach,
-            retract=retract,
-            process=process,
-        )
+        self.programs[i] = plan_weld(self.trajectories[i], tcp=self._configs_from_ui())
         self._refresh_weld_list()
         self._refresh_notes()
         self.refresh_viewer()
@@ -1028,7 +628,7 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
     def _refresh_notes(self):
         lines = []
         for p in self._planned_programs():
-            lines.append(f"Weld {p.weld_id}: {p.total_duration_s:.3f}s, {len(p.setpoints)} setpoints")
+            lines.append(f"Weld {p.weld_id}: {len(p.setpoints)} setpoints")
             for note in p.notes:
                 lines.append(f"  - {note}")
         self.notes_edit.setPlainText("\n".join(lines))
@@ -1049,60 +649,14 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
         if not programs:
             QMessageBox.information(self, "No Program", "No planned weld programs to save.")
             return
-        path, _ = QFileDialog.getSaveFileName(self, "Save Program JSON", "", "JSON files (*.json)")
+        path, _ = QFileDialog.getSaveFileName(self, "Save JSON + CSV", "", "JSON files (*.json)")
         if path:
             if not path.lower().endswith(".json"):
                 path += ".json"
+            csv_path = path[:-5] + ".csv"
             save_program_json(programs, path)
-
-    def export_robot_dialog(self):
-        programs = self._planned_programs()
-        if not programs:
-            QMessageBox.information(self, "No Program", "No planned weld programs to export.")
-            return
-        path, _ = QFileDialog.getSaveFileName(self, "Export for Robot", "weld_program_robot.json", "JSON files (*.json)")
-        if path:
-            if not path.lower().endswith(".json"):
-                path += ".json"
-            save_program_json(programs, path)
-
-    def load_to_robodk_dialog(self):
-        # Deferred import so the planner still runs without RoboDK installed.
-        try:
-            from robodk_bridge_1A import load_to_robodk, RoboDKBridgeError
-        except ImportError as exc:
-            QMessageBox.critical(
-                self, "Module Missing",
-                f"Cannot import robodk_bridge_1A: {exc}",
-            )
-            return
-        path, _ = QFileDialog.getOpenFileName(
-            self, "Load Welding Program JSON into RoboDK",
-            "", "JSON files (*.json)",
-        )
-        if not path:
-            return
-        try:
-            progs = load_to_robodk(path)
-        except RoboDKBridgeError as exc:
-            QMessageBox.critical(self, "RoboDK Bridge Failed", str(exc))
-            return
-        except Exception as exc:
-            QMessageBox.critical(
-                self, "RoboDK Bridge Failed",
-                f"Unexpected error: {exc}",
-            )
-            return
-        names = []
-        for p in progs:
-            try:
-                names.append(p.Name())
-            except Exception:
-                names.append("<program>")
-        QMessageBox.information(
-            self, "Loaded to RoboDK",
-            "Created {} program(s):\n  - {}".format(len(progs), "\n  - ".join(names)),
-        )
+            save_program_csv(programs, csv_path)
+            QMessageBox.information(self, "Saved", f"Saved:\n{path}\n{csv_path}")
 
     def _clear_viewer(self):
         try:
@@ -1124,11 +678,9 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
                 for p in traj.points:
                     self._draw_point(p.position, Quantity_Color(0.1, 0.5, 0.9, Quantity_TOC_RGB))
         else:
-            max_v = max((sp.velocity for p in programs for sp in p.setpoints), default=1.0)
             for program in programs:
                 for i, sp in enumerate(program.setpoints):
-                    rgb = (0.55, 0.55, 0.55) if sp.phase != "weld" else _velocity_color_tuple(sp.velocity, max_v)
-                    self._draw_point(sp.pose.position, Quantity_Color(*rgb, Quantity_TOC_RGB))
+                    self._draw_point(sp.pose.position, Quantity_Color(0.1, 0.5, 0.9, Quantity_TOC_RGB))
                     if self.chk_frames.isChecked() and sp.phase == "weld" and i % 5 == 0:
                         self._draw_frame(sp)
         self.fit_all()
@@ -1175,17 +727,16 @@ class TrajectoryPlannerWindow(QMainWindow if QT_AVAILABLE else object):
             self.source_window.showNormal()
             self.source_window.raise_()
             self.source_window.activateWindow()
+            self.hide()
 
     def _update_status_bar(self):
         planned = len(self._planned_programs())
-        total_time = sum(p.total_duration_s for p in self._planned_programs())
         self.statusBar().showMessage(
-            f"Welds: {len(self.trajectories)} | Planned: {planned}/{len(self.trajectories)} | "
-            f"Total time: {total_time:.3f}s"
+            f"Welds: {len(self.trajectories)} | Planned: {planned}/{len(self.trajectories)}"
         )
 
 
-def launch_with_trajectories(trajectories, parent=None, motion=None, tcp=None, approach=None, retract=None, process=None):
+def launch_with_trajectories(trajectories, parent=None, tcp=None):
     if not QT_AVAILABLE:
         raise RuntimeError(f"PyQt5 is required for GUI mode: {QT_IMPORT_ERROR}")
     app = QApplication.instance()
@@ -1193,15 +744,8 @@ def launch_with_trajectories(trajectories, parent=None, motion=None, tcp=None, a
         app = QApplication([])
     window = TrajectoryPlannerWindow(parent=parent)
     window.load_trajectories(trajectories)
-    if any(x is not None for x in (motion, tcp, approach, retract, process)):
-        window.programs = plan_all_welds(
-            trajectories,
-            motion=motion,
-            tcp=tcp,
-            approach=approach,
-            retract=retract,
-            process=process,
-        )
+    if tcp is not None:
+        window.programs = plan_all_welds(trajectories, tcp=tcp)
         window._refresh_weld_list()
         window._refresh_notes()
         window.refresh_viewer()
@@ -1213,23 +757,11 @@ def _run_cli(args):
     if load_trajectory_json is None:
         raise RuntimeError("trajectory_mapping_1A could not be imported")
     trajectories = load_trajectory_json(args.input)
-    motion = MotionConfig(
-        target_speed_mm_s=args.speed,
-        acceleration_max_mm_s2=args.accel,
-        jerk_max_mm_s3=args.jerk,
-        profile=args.profile,
-    )
-    process = ProcessConfig(
-        laser_power_w=args.laser,
-        wire_feed_rate=args.feed,
-        shielding_gas_flow=args.gas,
-        focus_offset_mm=args.focus,
-        ramp_up_time_s=args.ramp_up,
-        ramp_down_time_s=args.ramp_down,
-    )
-    programs = plan_all_welds(trajectories, motion=motion, process=process)
+    programs = plan_all_welds(trajectories)
     save_program_json(programs, args.output)
-    print(f"Planned {len(programs)} weld program(s); wrote {args.output}")
+    csv_path = args.output[:-5] + ".csv" if args.output.lower().endswith(".json") else args.output + ".csv"
+    save_program_csv(programs, csv_path)
+    print(f"Planned {len(programs)} weld program(s); wrote {args.output} and {csv_path}")
     return 0
 
 
@@ -1239,16 +771,6 @@ def main(argv=None):
     parser.add_argument("--input", help="Input trajectory JSON")
     parser.add_argument("--output", help="Output weld program JSON")
     parser.add_argument("--gui", action="store_true", help="Open GUI")
-    parser.add_argument("--speed", type=float, default=20.0)
-    parser.add_argument("--accel", type=float, default=200.0)
-    parser.add_argument("--jerk", type=float, default=2000.0)
-    parser.add_argument("--profile", default="trapezoidal", choices=["trapezoidal", "s_curve"])
-    parser.add_argument("--laser", type=float, default=1500.0)
-    parser.add_argument("--feed", type=float, default=5.0)
-    parser.add_argument("--gas", type=float, default=15.0)
-    parser.add_argument("--focus", type=float, default=0.0)
-    parser.add_argument("--ramp-up", type=float, default=0.2)
-    parser.add_argument("--ramp-down", type=float, default=0.2)
     args = parser.parse_args(argv)
 
     input_path = args.input or args.input_pos
@@ -1275,3 +797,4 @@ if __name__ == "__main__":
     except Exception as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         raise SystemExit(1)
+
