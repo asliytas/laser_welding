@@ -362,6 +362,38 @@ def _repair_singular_tangents(points, notes):
                 point.tangent = tangent
                 notes.append(f"Point {point.index}: tangent singularity, used neighbor average")
 
+def _reverse_points_for_continuity(points):
+    points.reverse()
+    for point in points:
+        point.tangent = (-point.tangent[0], -point.tangent[1], -point.tangent[2])
+
+def _make_normals_sign_consistent(points):
+    previous = None
+    for point in points:
+        normal = point.normal
+        if previous is not None:
+            dot = (
+                previous[0] * normal[0]
+                + previous[1] * normal[1]
+                + previous[2] * normal[2]
+            )
+            if dot < 0.0:
+                normal = (-normal[0], -normal[1], -normal[2])
+                point.normal = normal
+        if normal != (0.0, 0.0, 0.0):
+            previous = normal
+
+def _renumber_and_recompute_arc_lengths(points):
+    cumulative_arc = 0.0
+    previous_pos = None
+    for idx, point in enumerate(points):
+        if previous_pos is not None:
+            cumulative_arc += _point_distance(previous_pos, point.position)
+        point.index = idx
+        point.arc_length = cumulative_arc
+        previous_pos = point.position
+    return cumulative_arc
+
 def compute_segment_trajectory(segment_dict, step_mm, point_offset=0):
     """
     Compute WeldPoint list for one segment dictionary from 5.K in-memory data.
@@ -418,7 +450,6 @@ def compute_weld_trajectory(weld_dict, step_mm=30.0):
     """
     all_points = []
     all_notes = []
-    cumulative_arc = 0.0
     segments_meta = []
 
     for seg_idx, seg in enumerate(weld_dict.get("segments", [])):
@@ -426,11 +457,8 @@ def compute_weld_trajectory(weld_dict, step_mm=30.0):
             seg, step_mm, point_offset=len(all_points)
         )
 
-        for p in seg_points:
-            p.arc_length += cumulative_arc
-
-        if seg_points:
-            cumulative_arc = seg_points[-1].arc_length
+        if seg.get("reversed_for_continuity", False):
+            _reverse_points_for_continuity(seg_points)
 
         all_points.extend(seg_points)
         all_notes.extend([f"[Segment {seg_idx + 1}] {note}" for note in seg_notes])
@@ -450,13 +478,16 @@ def compute_weld_trajectory(weld_dict, step_mm=30.0):
             "n_points": len(seg_points),
         })
 
+    _make_normals_sign_consistent(all_points)
+    total_length = _renumber_and_recompute_arc_lengths(all_points)
+
     weld_id = weld_dict.get("id", 1)
     return WeldTrajectory(
         weld_id=weld_id,
         weld_name=weld_dict.get("name", f"Weld {weld_id}"),
         segments_meta=segments_meta,
         points=all_points,
-        total_length=cumulative_arc,
+        total_length=total_length,
         discretization_step_mm=step_mm,
         notes=all_notes,
     )

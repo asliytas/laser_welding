@@ -2621,10 +2621,7 @@ class MainWindow(QMainWindow):
                     skipped += 1
                     continue
                 if seg.get("reversed_for_continuity", False):
-                    wire_items = [
-                        self._reversed_wire_info(wire_info)
-                        for wire_info in reversed(wires)
-                    ]
+                    wire_items = list(reversed(wires))
                 else:
                     wire_items = list(wires)
                 for wire_index, wire_info in enumerate(wire_items, 1):
@@ -2644,15 +2641,6 @@ class MainWindow(QMainWindow):
             if ready["segments"]:
                 ready_welds.append(ready)
         return ready_welds, skipped
-
-    def _reversed_wire_info(self, wire_info):
-        reversed_info = dict(wire_info)
-        try:
-            from OCC.Core.TopoDS import topods
-            reversed_info["wire"] = topods.Wire(wire_info["wire"].Reversed())
-        except Exception:
-            reversed_info["wire"] = wire_info["wire"].Reversed()
-        return reversed_info
 
     def proceed_to_trajectory_mapping(self):
         total_segments = sum(len(w["segments"]) for w in self.welds)
@@ -2717,7 +2705,7 @@ class MainWindow(QMainWindow):
             }
 
         return {
-            "version": "5.R",
+            "version": "5.S",
             "step_file": self.current_step_file,
             "welds": [
                 {
