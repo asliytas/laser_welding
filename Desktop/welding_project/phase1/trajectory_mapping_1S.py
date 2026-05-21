@@ -84,6 +84,29 @@ def _normalize(vec, eps=1e-9):
         return (0.0, 0.0, 0.0), False
     return (vec[0] / mag, vec[1] / mag, vec[2] / mag), True
 
+def _canonical_antiparallel_normal(n_a, n_b):
+    """
+    Pick a deterministic normal when two face normals cancel each other.
+
+    In this case there is no true bisector. Returning face_a made auto face
+    selection order observable: (upper, lower) could produce +N while
+    (lower, upper) produced -N for the same seam. The canonical sign below is
+    based only on the unordered normal pair, so swapping faces returns the same
+    TCP normal.
+    """
+    best = n_a
+    if n_b is not None and abs(n_b[0]) + abs(n_b[1]) + abs(n_b[2]) > (
+        abs(n_a[0]) + abs(n_a[1]) + abs(n_a[2])
+    ):
+        best = n_b
+
+    for value in best:
+        if abs(value) > 1e-6:
+            if value < 0.0:
+                return (-best[0], -best[1], -best[2])
+            return best
+    return best
+
 def _shape_length(shape):
     _require_occ()
     props = GProp_GProps()
@@ -331,7 +354,7 @@ def bisector_normal(face_a, face_b, point_xyz):
     if valid_a and valid_b:
         bisector, ok = _normalize((n_a[0] + n_b[0], n_a[1] + n_b[1], n_a[2] + n_b[2]), eps=1e-6)
         if not ok:
-            return n_a, False, "anti_parallel_fallback_a"
+            return _canonical_antiparallel_normal(n_a, n_b), False, "anti_parallel_canonical"
         return bisector, True, "bisector"
 
     if valid_a:
